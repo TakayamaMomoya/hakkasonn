@@ -15,7 +15,7 @@
 
 //マクロ定義
 #define DOMINO_TEX				""										//テクスチャファイル名
-#define ROLL_SPEED				(-0.16f)								//回転スピード
+#define ROLL_SPEED				(-0.09f)								//回転スピード
 #define ROLL_LIMIT				(D3DX_PI * 0.35f)						//倒れきる角度
 #define POS_LIMIT_Y				(SCREEN_HEIGHT * 0.82f)					//ドミノの到達地点
 #define DOMINO_FACT				(0.1f)									//ドミノの係数
@@ -204,7 +204,7 @@ void UpdateTitleDomino(void)
 			//状態更新処理
 			ManageStateDomino(&pDomino[nCntDomino]);
 
-			pDomino[nCntDomino].posWorld.x -= 25.0f;
+			pDomino[nCntDomino].posWorld.x -= 12.5f;
 
 			if (nCntDomino >= MAX_DOMINO - 1)
 			{//最大数のドミノが画面内に入ったら

@@ -55,7 +55,7 @@ HRESULT CTitle::Init()
 	//ƒhƒ~ƒm¢Š«
 	for (int nCntDomino = 0;nCntDomino < MAX_DOMINO;nCntDomino++)
 	{
-		SetDomino(D3DXVECTOR3(SCREEN_WIDTH + nCntDomino * DOMINO_WIDTH * 2.5f, SCREEN_HEIGHT * 0.82f, 0.0f));
+		SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + nCntDomino * DOMINO_WIDTH * 2.5f, SCREEN_HEIGHT * 0.82f, 0.0f));
 	}
 
 	//î•ñæ“¾
