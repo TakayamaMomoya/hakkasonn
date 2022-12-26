@@ -22,18 +22,16 @@ LPDIRECT3DTEXTURE9 g_apTextureSign[SIGNTYPE_MAX] = {};				//テクスチャへのポイン
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffSign = NULL;						//頂点バッファへのポインタ
 Sign g_aSign[MAX_SIGN];												//構造体
 int g_nSignNum;														//総数
-static const D3DXCOLOR COL_SIGN[NUM_COL] =
+const char *c_apFilenameBlock[SIGNTYPE_MAX] =
 {
-	{ 1.0f,0.0f,0.0f,1.0f },	//赤
-	{ 1.0f,1.0f,0.0f,1.0f },	//黄色
-	{ 0.0f,0.0f,1.0f,1.0f },	//青
-	{ 0.0f,1.0f,0.0f,1.0f }		//緑
-};																		//色の種類
+	"data\\TEXTURE\\看板.png",
+	"data\\TEXTURE\\看板.png",
+	"data\\TEXTURE\\看板.png"
+};																	//テクスチャファイル名
 
 //プロトタイプ宣言
 void UpdateSignPos(Sign *pSign);
 void UpdateSignPolygon(Sign *pSign, int nCntSign);
-void ManageStateSign(Sign *pSign);
 
 //==================================================================================================
 //初期化処理
@@ -57,7 +55,7 @@ void InitSign(void)
 	for (int nCntTex = 0;nCntTex < SIGNTYPE_MAX;nCntTex++)
 	{
 		D3DXCreateTextureFromFile(pDevice,
-			SIGN_TEX,
+			c_apFilenameBlock[nCntTex],
 			&g_apTextureSign[nCntTex]);
 	}
 
@@ -246,20 +244,20 @@ void SetSign(D3DXVECTOR3 pos, SIGNTYPE type)
 			{
 			case SIGNTYPE_10:
 
-				pSign->width = 80;
-				pSign->height = 80;
+				pSign->width = 150;
+				pSign->height = 150;
 
 				break;
 			case SIGNTYPE_50:
 
-				pSign->width = 130;
-				pSign->height = 130;
+				pSign->width = 200;
+				pSign->height = 200;
 
 				break;
 			case SIGNTYPE_100:
 
-				pSign->width = 200;
-				pSign->height = 200;
+				pSign->width = 250;
+				pSign->height = 250;
 
 				break;
 			}
@@ -341,7 +339,7 @@ void DrawSign(void)
 		{//使用している状態なら
 
 			//テクスチャ設定
-			pDevice->SetTexture(0, NULL);
+			pDevice->SetTexture(0, g_apTextureSign[0]);
 
 			//ポリゴンの描画
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, nCntSign * 4, 2);
