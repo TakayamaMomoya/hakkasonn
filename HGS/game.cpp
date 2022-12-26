@@ -223,57 +223,59 @@ void CGame::Update()
 	//GetInput
 	CInput *pInput = CInput::GetKey();
 
-	//===============================================
-	//目標ボタンが押されているかの判定
-	if (g_PushState.NowTargetButton == TARGETBUTTON_UP)
+	if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
 	{
-		m_pButton->SetPos(POS_UP);
-		m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(180)));
-		if (pInput->Trigger(KEY_UP) == true)
+		//===============================================
+		//目標ボタンが押されているかの判定
+		if (g_PushState.NowTargetButton == TARGETBUTTON_UP)
 		{
-			g_PushState.nPushCount++;
-			g_PushState.nColorCount = 3;
+			m_pButton->SetPos(POS_UP);
+			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(180)));
+			if (pInput->Trigger(KEY_UP) == true)
+			{
+				g_PushState.nPushCount++;
+				g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
+			}
+		}
+		else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
+		{
+			m_pButton->SetPos(POS_DOWN);
+			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(0)));
+			if (pInput->Trigger(KEY_DOWN) == true)
+			{
+				g_PushState.nPushCount++;
+				g_PushState.nColorCount = 3;
+
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
+			}
+		}
+		else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
+		{
+			m_pButton->SetPos(POS_RIGHT);
+			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(90)));
+			if (pInput->Trigger(KEY_RIGHT) == true)
+			{
+				g_PushState.nPushCount++;
+				g_PushState.nColorCount = 3;
+
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
+			}
+		}
+		else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
+		{
+			m_pButton->SetPos(POS_LEFT);
+			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(270)));
+			if (pInput->Trigger(KEY_LEFT) == true)
+			{
+				g_PushState.nPushCount++;
+				g_PushState.nColorCount = 3;
+
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
+			}
 		}
 	}
-	else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
-	{
-		m_pButton->SetPos(POS_DOWN);
-		m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(0)));
-		if (pInput->Trigger(KEY_DOWN) == true)
-		{
-			g_PushState.nPushCount++;
-			g_PushState.nColorCount = 3;
-
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
-		}
-	}
-	else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
-	{
-		m_pButton->SetPos(POS_RIGHT);
-		m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(90)));
-		if (pInput->Trigger(KEY_RIGHT) == true)
-		{
-			g_PushState.nPushCount++;
-			g_PushState.nColorCount = 3;
-
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
-		}
-	}
-	else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
-	{
-		m_pButton->SetPos(POS_LEFT);
-		m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(270)));
-		if (pInput->Trigger(KEY_LEFT) == true)
-		{
-			g_PushState.nPushCount++;
-			g_PushState.nColorCount = 3;
-
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
-		}
-	}
-
 	m_pButton->Update();
 
 	//ドミノ情報取得
