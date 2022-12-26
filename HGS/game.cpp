@@ -279,7 +279,6 @@ void CGame::Update()
 	{
 		UpdateTutorial();
 		UpdateCountDown();
-		m_pNumber_Manager->Update();
 	}
 	else
 	{
@@ -287,6 +286,7 @@ void CGame::Update()
 		m_pBg->Update();
 		if (g_gameState == GAMESTATE_DOWN)
 		{
+			m_pNumber_Manager->Update();
 			m_pstone_bridge->Update();
 		}
 		if (g_gameState == GAMESTATE_END)
