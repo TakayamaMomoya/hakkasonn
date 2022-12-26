@@ -90,7 +90,6 @@ private:
 	CNumber_Manager* m_pNumber_Manager;
 
 
-
 };
 
 

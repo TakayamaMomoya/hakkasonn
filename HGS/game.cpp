@@ -423,10 +423,17 @@ void CGame::Update()
 			pDomino->state = DOMINOSTATE_DOWN;
 
 			pHand->state = HANDSTATE_PUSH;
+
+			//サウンド(SE)の再生
+			CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 		}
 
 		if (g_gameState == GAMESTATE_DOWN && GetDominoNum() == 0)
 		{//ドミノを一個も出さずに倒した場合
+
+		 //サウンド(SE)の再生
+			CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
+
 			SetGameState(GAMESTATE_END);
 		}
 
