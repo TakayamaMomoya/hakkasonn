@@ -26,11 +26,12 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
-#define SCROLL_SPEED			(11.0f)					//スクロールスピード
-#define MAX_TIME (3)
-#define TIMELIMIT (20)
-#define CLOSSKEY (4)
+#define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)			//ドミノ同士の間隔
+#define SCROLL_SPEED			(11.0f)							//スクロールスピード
+#define MAX_TIME				(3)
+#define TIMELIMIT				(2)
+#define CLOSSKEY				(4)
+#define FADE_TIMER				(300)							//フェードするまでの時間
 
 //*****************************************************************************
 void ManageScroll(void);
@@ -46,6 +47,7 @@ static const D3DXVECTOR3 POS_RIGHT = D3DXVECTOR3(POS.x + 70.0f, POS.y, 0.0f);
 static const D3DXVECTOR3 POS_LEFT = D3DXVECTOR3(POS.x - 70.0f, POS.y, 0.0f);
 D3DXVECTOR3 g_posWorld;
 GAMESTATE g_gameState;
+int g_nCntFadeGame;
 
 //*****************************************************************************
 // コンストラクタ
@@ -69,6 +71,7 @@ HRESULT CGame::Init()
 	//変数初期化
 	g_posWorld = {0.0f,0.0f,0.0f};
 	g_gameState = GAMESTATE_PUSH;
+	g_nCntFadeGame = 0;
 
 	//ドミノ初期化
 	InitDomino();
@@ -164,7 +167,7 @@ HRESULT CGame::Init()
 	m_pstone_bridge->SetDiagonalLine(SCREEN_WIDTH, 500.0f);
 	m_pstone_bridge->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	m_pstone_bridge->SetUVSize(D3DXVECTOR2(0.3f, 0.5f));
-	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.008f, 0.0f));
+	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.0041f, 0.0f));
 	m_pstone_bridge->SetPolygon();
 
 
@@ -189,7 +192,7 @@ HRESULT CGame::Init()
 	m_nText[6] = CTexture::LoadTexture("data\\TEXTURE\\漂流物07.png");
 	m_nText[7] = CTexture::LoadTexture("data\\TEXTURE\\漂流物08.png");
 	m_nText[8] = CTexture::LoadTexture("data\\TEXTURE\\漂流物09.png");
-	m_nText[9] = CTexture::LoadTexture("data\\TEXTURE\\漂流物010.png");
+	m_nText[9] = CTexture::LoadTexture("data\\TEXTURE\\漂流物10.png");
 	m_nText[10] = CTexture::LoadTexture("data\\TEXTURE\\漂流物11.png");
 	m_nText[11] = CTexture::LoadTexture("data\\TEXTURE\\漂流物12.png");
 	m_nText[12] = CTexture::LoadTexture("data\\TEXTURE\\漂流物13.png");
@@ -198,7 +201,7 @@ HRESULT CGame::Init()
 	m_nText[15] = CTexture::LoadTexture("data\\TEXTURE\\漂流物16.png");
 	m_nText[16] = CTexture::LoadTexture("data\\TEXTURE\\漂流物17.png");
 
-
+	
 	m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
 
 
@@ -279,7 +282,6 @@ void CGame::Update()
 	{
 		UpdateTutorial();
 		UpdateCountDown();
-		m_pNumber_Manager->Update();
 	}
 	else
 	{
@@ -287,6 +289,7 @@ void CGame::Update()
 		m_pBg->Update();
 		if (g_gameState == GAMESTATE_DOWN)
 		{
+			m_pNumber_Manager->Update();
 			m_pstone_bridge->Update();
 		}
 		if (g_gameState == GAMESTATE_END)
@@ -434,18 +437,24 @@ void CGame::Update()
 		}
 
 
+
 		if (g_gameState == GAMESTATE_END)
 		{//ゲーム終了なら決定ボタンで遷移
+
+			//スコア設定
 			SetScore(g_PushState.nPushCount);
-			if (pInput->Trigger(KEY_DECISION))
-			{
+
+			if (pInput->Trigger(KEY_DECISION) || FADE_TIMER < g_nCntFadeGame)
+			{//画面遷移
 				CManager * pManager = GetManager();
 				pManager->NextMode(TYPE_RESULT);
 			}
+
+			//カウンタ加算
+			g_nCntFadeGame++;
 		}
 	}
 }
-
 
 //*****************************************************************************
 // スクロール管理

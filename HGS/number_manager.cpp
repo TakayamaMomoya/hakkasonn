@@ -83,7 +83,7 @@ void CNumber_Manager::Update()
 		}
 
 		//更新処理
-		pNumber->AddNumberPos(D3DXVECTOR3(-22.0f,0.0f,0.0f));
+		pNumber->AddNumberPos(D3DXVECTOR3(-11.0f,0.0f,0.0f));
 
 		//終了条件処理
 		if (pNumber->GetPos().x < -300.0f)
@@ -126,7 +126,7 @@ void CNumber_Manager::Draw()
 }
 
 //ナンバーのセット
-void CNumber_Manager::SetNumber(D3DXVECTOR3 pos, int nNum)
+void CNumber_Manager::SetNumber(D3DXVECTOR3 pos, float fSize, int nNum)
 {
 	CNumber* pNumber = nullptr;
 
@@ -139,9 +139,7 @@ void CNumber_Manager::SetNumber(D3DXVECTOR3 pos, int nNum)
 		return;
 	}
 
-	pNumber->SetNumber(pos,3,50.0f, nNum);
-
-	
+	pNumber->SetNumber(D3DXVECTOR3(pos.x + 15.0f,pos.y,0.0f),3, fSize, nNum);
 
 	//リストに瓦礫情報を追加
 	m_NumberList.push_back(pNumber);
