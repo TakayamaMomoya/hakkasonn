@@ -13,18 +13,22 @@
 #include "domino.h"
 
 //マクロ定義
-#define HAND_TEX				""									//テクスチャファイル名
-#define HAND_HEIGHT			(100)									//高さ
-#define HAND_WIDTH			(100)									//幅
+#define HAND_TEX			"data\\TEXTURE\\手.png"					//テクスチャファイル名
+#define HAND_HEIGHT			(300)									//高さ
+#define HAND_WIDTH			(300)									//幅
+#define NUM_POS_DEST		(3)										//目標地点の数
+#define HAND_FACT			(0.1f)									//ハンドの移動係数
+#define LIMIT_DIFF			(50.0f)									//次のキーにうつる差分値
 
 //グローバル変数宣言
 LPDIRECT3DTEXTURE9 g_pTextureHand = NULL;							//テクスチャへのポインタ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffHand = NULL;						//頂点バッファへのポインタ
 Hand g_hand;														//構造体
+D3DXVECTOR3 g_aPosDestHand[NUM_POS_DEST];							//目標地点
 
 //プロトタイプ宣言
 void UpdateHandPos(Hand *pHand);
-void UpdateHandPolygon(Hand *pHand, int nCntHand);
+void UpdateHandPolygon(Hand *pHand);
 void ManageStateHand(Hand *pHand);
 
 //==================================================================================================
@@ -61,11 +65,17 @@ void InitHand(void)
 	//情報取得
 	Hand *pHand = GetHand();
 
+	//目標地点設定
+	g_aPosDestHand[0] = { SCREEN_WIDTH * 0.2f,SCREEN_HEIGHT * 0.55f,0.0f };
+	g_aPosDestHand[1] = { SCREEN_WIDTH * 0.0f,SCREEN_HEIGHT * 0.55f,0.0f };
+	g_aPosDestHand[2] = { SCREEN_WIDTH * 0.3f,SCREEN_HEIGHT * 0.55f,0.0f };
+
 	//情報の設定
-	pHand->pos = { 0.0f ,0.0f,0.0f };
-	pHand->posWorld = { 0.0f ,0.0f,0.0f };
+	pHand->pos = { g_aPosDestHand[0].x ,g_aPosDestHand[0].y,0.0f };
+	pHand->posWorld = { g_aPosDestHand[0].x ,g_aPosDestHand[0].y,0.0f };
 	pHand->col = D3DXCOLOR{ 1.0f,1.0f,1.0f,1.0f };
 	pHand->state = HANDSTATE_NORMAL;
+	pHand->nMovekey = 0;
 
 	//頂点座標の設定
 	pVtx[0].pos = D3DXVECTOR3(0, 0, 0.0f);
@@ -118,6 +128,17 @@ void UninitHand(void)
 //==================================================================================================
 void UpdateHand(void)
 {
+	//情報取得
+	Hand *pHand = GetHand();
+
+	if (pHand->state == HANDSTATE_PUSH)
+	{
+		//位置更新処理
+		UpdateHandPos(pHand);
+	}
+
+	//ポリゴン更新処理
+	UpdateHandPolygon(pHand);
 }
 
 //==================================================================================================
@@ -125,6 +146,26 @@ void UpdateHand(void)
 //==================================================================================================
 void UpdateHandPos(Hand *pHand)
 {
+	//差分の取得
+	D3DXVECTOR3 posDiff = (g_aPosDestHand[pHand->nMovekey] - pHand->posWorld);
+	posDiff.x = posDiff.x * posDiff.x;
+	posDiff.y = posDiff.y * posDiff.y;
+
+	//目標へ移動
+	pHand->posWorld += (g_aPosDestHand[pHand->nMovekey] - pHand->posWorld) * HAND_FACT;
+
+	if (posDiff.x + posDiff.y < LIMIT_DIFF * LIMIT_DIFF)
+	{//差分が一定以下で次のキーへ
+		if (pHand->nMovekey < NUM_POS_DEST - 1)
+		{//キーを進める
+			pHand->nMovekey++;
+		}
+		else if(GetGameState() == GAMESTATE_PUSH)
+		{//ゲーム状態を変更
+			SetGameState(GAMESTATE_DOWN);
+		}
+	}
+
 	//相対位置設定
 	pHand->pos = *GetPosWorld() + pHand->posWorld;
 }
@@ -132,7 +173,7 @@ void UpdateHandPos(Hand *pHand)
 //==================================================================================================
 //ポリゴン更新処理
 //==================================================================================================
-void UpdateHandPolygon(Hand *pHand, int nCntHand)
+void UpdateHandPolygon(Hand *pHand)
 {
 	//頂点情報のポインタ
 	VERTEX_2D *pVtx;
