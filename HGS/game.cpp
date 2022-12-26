@@ -27,7 +27,7 @@
 #define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ƒhƒ~ƒm“¯Žm‚ÌŠÔŠu
 #define SCROLL_SPEED			(11.0f)					//ƒXƒNƒ[ƒ‹ƒXƒs[ƒh
 #define MAX_TIME (3)
-#define TIMELIMIT (2)
+#define TIMELIMIT (10)
 #define CLOSSKEY (4)
 
 //*****************************************************************************
@@ -158,7 +158,7 @@ HRESULT CGame::Init()
 	m_pstone_bridge->SetDiagonalLine(SCREEN_WIDTH, 500.0f);
 	m_pstone_bridge->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	m_pstone_bridge->SetUVSize(D3DXVECTOR2(0.3f, 0.5f));
-	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.008f, 0.0f));
+	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.0041f, 0.0f));
 	m_pstone_bridge->SetPolygon();
 
 
@@ -183,7 +183,7 @@ HRESULT CGame::Init()
 	m_nText[6] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨07.png");
 	m_nText[7] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨08.png");
 	m_nText[8] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨09.png");
-	m_nText[9] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨010.png");
+	m_nText[9] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨10.png");
 	m_nText[10] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨11.png");
 	m_nText[11] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨12.png");
 	m_nText[12] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨13.png");

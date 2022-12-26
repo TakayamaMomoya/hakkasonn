@@ -228,7 +228,8 @@ void UpdateSignPolygon(Sign *pSign, int nCntSign)
 //==================================================================================================
 void SetSign(D3DXVECTOR3 pos, SIGNTYPE type, int nDominoNumber)
 {
-	float fSize = 0.0f;
+	float fSize = 50.0f;
+	float fPosy = -100.0f; 
 	//ナンバーマネージャーの取得
 	CManager *pManager = GetManager();
 	CGame* pGame = (CGame*)pManager->GetGameObject();
@@ -250,19 +251,22 @@ void SetSign(D3DXVECTOR3 pos, SIGNTYPE type, int nDominoNumber)
 			switch (type)
 			{
 			case SIGNTYPE_10:
-				
+				fPosy = -100.0f;
+				fSize = 50.0f;
 				pSign->width = 150;
 				pSign->height = 150;
 				
 				break;
 			case SIGNTYPE_50:
-
+				fPosy = -130.0f;
+				fSize = 60.0f;
 				pSign->width = 200;
 				pSign->height = 200;
 
 				break;
 			case SIGNTYPE_100:
-
+				fPosy = -160.0f;
+				fSize = 70.0f;
 				pSign->width = 250;
 				pSign->height = 250;
 
@@ -307,7 +311,7 @@ void SetSign(D3DXVECTOR3 pos, SIGNTYPE type, int nDominoNumber)
 			);
 
 			//ナンバーの生成
-			pNumber_Manager->SetNumber(D3DXVECTOR3(pos.x,pos.y - 100.0f,0.0f), nDominoNumber);
+			pNumber_Manager->SetNumber(D3DXVECTOR3(pos.x, pos.y + fPosy, 0.0f), fSize, nDominoNumber);
 			break;
 		}
 
