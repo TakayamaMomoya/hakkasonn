@@ -14,6 +14,7 @@
 #include "texture.h"
 #include "input.h"
 #include "manager.h"
+#include "sound.h"
 
 //*****************************************************************************
 // コンストラクタ
@@ -55,6 +56,9 @@ HRESULT CResult::Init()
 	pPolygon[0].SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
 	pPolygon[0].SetDiagonalLine(200.0f, 200.0f);
 	pPolygon[0].SetPolygon();
+
+	CManager::GetSound()->Play(CSound::SOUND_BGM_RESULT);
+
 	return S_OK;
 }
 
@@ -63,6 +67,8 @@ HRESULT CResult::Init()
 //*****************************************************************************
 void CResult::Uninit()
 {
+	CManager::GetSound()->Stop(CSound::SOUND_BGM_RESULT);
+
 	//UiRelease
 	if (m_pUi != nullptr)
 	{

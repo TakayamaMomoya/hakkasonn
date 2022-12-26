@@ -14,7 +14,9 @@
 #include "texture.h"
 #include "ui.h"
 #include "domino.h"
+#include "sound.h"
 #include "hand.h"
+#include "Score.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -68,6 +70,9 @@ HRESULT CGame::Init()
 
 	//ハンド初期化
 	InitHand();
+
+	//スコア初期化
+	InitScore();
 
 	//各数値初期化
 	g_PushState.NowTargetButton = TARGETBUTTON_NONE;
@@ -143,13 +148,15 @@ HRESULT CGame::Init()
 	}
 	nIndex = CTexture::LoadTexture("data\\TEXTURE\\stone_bridge.png");
 	m_pstone_bridge->SetTextIndex(nIndex);
-	m_pstone_bridge->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT - 400.0f, 0.0f));
+	m_pstone_bridge->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT - 250.0f, 0.0f));
 	m_pstone_bridge->SetDiagonalLine(SCREEN_WIDTH, 500.0f);
 	m_pstone_bridge->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	m_pstone_bridge->SetUVSize(D3DXVECTOR2(0.3f, 0.5f));
-	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.001f, 0.0f));
+	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.008f, 0.0f));
 	m_pstone_bridge->SetPolygon();
 
+
+	CManager::GetSound()->Play(CSound::SOUND_BGM_GAME);
 
 	return S_OK;
 }
@@ -159,11 +166,16 @@ HRESULT CGame::Init()
 //*****************************************************************************
 void CGame::Uninit()
 {
+	CManager::GetSound()->Stop(CSound::SOUND_BGM_GAME);
+
 	//ドミノ終了
 	UninitDomino();
 
 	//ハンド終了
 	UninitHand();
+
+	//スコア破棄
+	UninitScore();
 
 	if (m_pButton != nullptr)
 	{
@@ -191,7 +203,11 @@ void CGame::Uninit()
 void CGame::Update()
 {
 	m_pBg->Update();
-	m_pstone_bridge->Update();
+	if (g_gameState == GAMESTATE_DOWN)
+	{
+		m_pstone_bridge->Update();
+	}
+	
 
 	if (g_PushState.nColorCount <= 0)
 	{
@@ -209,12 +225,13 @@ void CGame::Update()
 	g_PushState.nPushLimitTime--;
 	g_PushState.nTotalLimitTime--;
 	g_PushState.nColorCount--;
+
 	if (g_PushState.nPushLimitTime <= 0)
 	{//次のボタンまでの時間が０になったとき
 
 		//目標ボタンをランダムに設定
 		int nRandButton = rand() % (TARGETBUTTON_MAX - 1);
-		int nRandTime = (rand() % MAX_TIME + 2) * 60;
+		int nRandTime = (rand() % MAX_TIME + 1) * 60;
 
 		g_PushState.NowTargetButton = (TARGETBUTTON)(nRandButton + 1);
 		g_PushState.nPushLimitTime = nRandTime;
@@ -223,52 +240,52 @@ void CGame::Update()
 	//GetInput
 	CInput *pInput = CInput::GetKey();
 
-	//===============================================
-	//目標ボタンが押されているかの判定
-	if (g_PushState.NowTargetButton == TARGETBUTTON_UP)
+
+	if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
 	{
-		m_pButton->SetPos(POS_UP);
-		m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(180)));
-		if (pInput->Trigger(KEY_UP) == true)
+		//===============================================
+		//目標ボタンが押されているかの判定
+		if (g_PushState.NowTargetButton == TARGETBUTTON_UP)
 		{
-			g_PushState.nPushCount++;
-			g_PushState.nColorCount = 3;
+			m_pButton->SetPos(POS_UP);
+			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(180)));
+			if (pInput->Trigger(KEY_UP) == true)
+			{
+				g_PushState.nPushCount++;
+				g_PushState.nColorCount = 3;
 
 			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
-	}
-	else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
-	{
-		m_pButton->SetPos(POS_DOWN);
-		m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(0)));
-		if (pInput->Trigger(KEY_DOWN) == true)
+		else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
 		{
-			g_PushState.nPushCount++;
-			g_PushState.nColorCount = 3;
+			m_pButton->SetPos(POS_DOWN);
+			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(0)));
+			if (pInput->Trigger(KEY_DOWN) == true)
+			{
+				g_PushState.nPushCount++;
+				g_PushState.nColorCount = 3;
 
 			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
-	}
-	else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
-	{
-		m_pButton->SetPos(POS_RIGHT);
-		m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(90)));
-		if (pInput->Trigger(KEY_RIGHT) == true)
+		else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
 		{
-			g_PushState.nPushCount++;
-			g_PushState.nColorCount = 3;
+			m_pButton->SetPos(POS_RIGHT);
+			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(90)));
+			if (pInput->Trigger(KEY_RIGHT) == true)
+			{
+				g_PushState.nPushCount++;
+				g_PushState.nColorCount = 3;
 
 			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
-	}
-	else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
-	{
-		m_pButton->SetPos(POS_LEFT);
-		m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(270)));
-		if (pInput->Trigger(KEY_LEFT) == true)
+		else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
 		{
-			g_PushState.nPushCount++;
-			g_PushState.nColorCount = 3;
+			m_pButton->SetPos(POS_LEFT);
+			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(270)));
+			if (pInput->Trigger(KEY_LEFT) == true)
+			{
+				g_PushState.nPushCount++;
+				g_PushState.nColorCount = 3;
 
 			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
 		}
@@ -301,7 +318,7 @@ void CGame::Update()
 
 	if (g_gameState == GAMESTATE_END)
 	{//ゲーム終了なら決定ボタンで遷移
-		
+		SetScore(g_PushState.nPushCount);
 		if (pInput->Trigger(KEY_DECISION))
 		{
 			CManager * pManager = GetManager();
@@ -309,6 +326,7 @@ void CGame::Update()
 		}
 	}
 }
+
 
 //*****************************************************************************
 // スクロール管理
@@ -348,6 +366,11 @@ void CGame::Draw()
 
 	//石橋
 	m_pstone_bridge->Draw();
+	if (g_gameState == GAMESTATE_END)
+	{
+		//スコア描画
+		DrawScore();
+	}
 }
 
 //*****************************************************************************

@@ -18,6 +18,7 @@ class CInput;
 class CObject;
 class CRenderer;
 class CFade;
+class CSound;
 
 //*****************************************************************************
 // —ñ‹“Œ^’è‹`
@@ -58,9 +59,11 @@ public:
 	bool IsChangingMode() { return m_bChange; }
 	int GetAirframe() { return m_nAirframe; }
 	void SetAirframe(int nAirframe) { m_nAirframe = nAirframe; }
+	static CSound *GetSound() { return m_pSound; }
 
 private:
 	MODE_TYPE m_Mode;
+	static CSound* m_pSound;
 	bool m_bChange;
 	CRenderer *m_pRenderer;
 	CObject *m_pGame;
