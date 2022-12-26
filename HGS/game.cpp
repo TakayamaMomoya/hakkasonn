@@ -19,8 +19,8 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define DOMINO_SPACE			(50)					//ドミノ同士の間隔
-#define SCROLL_SPEED			(8.0f)					//スクロールスピード
+#define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
+#define SCROLL_SPEED			(22.0f)					//スクロールスピード
 #define MAX_TIME (3)
 #define TIMELIMIT (10)
 #define CLOSSKEY (4)
@@ -234,7 +234,7 @@ void CGame::Update()
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
 	}
 	else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
@@ -246,7 +246,7 @@ void CGame::Update()
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
 	}
 	else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
@@ -258,7 +258,7 @@ void CGame::Update()
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
 	}
 	else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
@@ -302,7 +302,6 @@ void CGame::Update()
 			pManager->NextMode(TYPE_RESULT);
 		}
 	}
-
 }
 
 //*****************************************************************************
