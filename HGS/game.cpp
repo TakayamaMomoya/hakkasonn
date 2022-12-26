@@ -144,7 +144,7 @@ HRESULT CGame::Init()
 	}
 	nIndex = CTexture::LoadTexture("data\\TEXTURE\\stone_bridge.png");
 	m_pstone_bridge->SetTextIndex(nIndex);
-	m_pstone_bridge->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT - 400.0f, 0.0f));
+	m_pstone_bridge->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT - 250.0f, 0.0f));
 	m_pstone_bridge->SetDiagonalLine(SCREEN_WIDTH, 500.0f);
 	m_pstone_bridge->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	m_pstone_bridge->SetUVSize(D3DXVECTOR2(0.3f, 0.5f));
@@ -195,10 +195,10 @@ void CGame::Uninit()
 //*****************************************************************************
 void CGame::Update()
 {
+	m_pBg->Update();
 	if (g_gameState == GAMESTATE_DOWN)
 	{
 		m_pstone_bridge->Update();
-		m_pBg->Update();
 	}
 	
 
