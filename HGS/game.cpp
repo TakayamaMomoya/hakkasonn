@@ -17,6 +17,7 @@
 #include "sound.h"
 #include "hand.h"
 #include "Score.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -255,6 +256,9 @@ void CGame::Update()
 				g_PushState.nColorCount = 3;
 
 				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+
+				//サウンド(SE)の再生
+				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
@@ -267,6 +271,9 @@ void CGame::Update()
 				g_PushState.nColorCount = 3;
 
 				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+
+				//サウンド(SE)の再生
+				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
@@ -279,6 +286,9 @@ void CGame::Update()
 				g_PushState.nColorCount = 3;
 
 				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+
+				//サウンド(SE)の再生
+				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
@@ -291,6 +301,9 @@ void CGame::Update()
 				g_PushState.nColorCount = 3;
 
 				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
+
+				//サウンド(SE)の再生
+				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 			}
 
 		}
