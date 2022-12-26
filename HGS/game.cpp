@@ -286,12 +286,12 @@ void CGame::Update()
 	ManageScroll();
 
 	if (g_PushState.nTotalLimitTime <= 0 && g_gameState == GAMESTATE_PUSH)
-	
 	{//制限時間がなくなったときドミノを倒しはじめる
 
 		pDomino->state = DOMINOSTATE_DOWN;
+
+		SetGameState(GAMESTATE_DOWN);
 	}
-	
 
 	if (g_gameState == GAMESTATE_END)
 	{//ゲーム終了なら決定ボタンで遷移
