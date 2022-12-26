@@ -1,38 +1,42 @@
 //=============================================================================
 //
-// texture.h
+// number_manager.h
 // Author : koduna hirohito
 //
 //=============================================================================
-#ifndef _TEXTURE_H_			//このマクロ定義がされなかったら
-#define _TEXTURE_H_			//2重インクルード防止のマクロ定義
-
+#ifndef _NUMBER_MANAGER_H_			//このマクロ定義がされなかったら
+#define _NUMBER_MANAGER_H_			//2重インクルード防止のマクロ定義
 //*****************************************************************************
 // インクルード
 //*****************************************************************************
 #include "main.h"
+#include <list>
+
+//*****************************************************************************
+// 前方宣言
+//*****************************************************************************
+class CNumber;
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class CTexture
+class CNumber_Manager
 {
-private:
-	static const int TEXTURE_MAX = 120;
+
 public:
-	CTexture();
-	~CTexture();
+	CNumber_Manager();
+	~CNumber_Manager();
 
-	static CTexture *Create();
-	static CTexture *GetTextuerIndex() { return m_pTextuerClass; }
-	static int LoadTexture(char *address);
-	static void Uninit();
-	static LPDIRECT3DTEXTURE9 GetTexture(int nindex) { return m_pTexture[nindex]; }
+	HRESULT Init();
+	void Uninit();
+	void Update();
+	void Draw();
+
+	void SetNumber(D3DXVECTOR3 pos, int nNum);
 
 private:
-	static int m_nNowIndex;
-	static CTexture *m_pTextuerClass;
-	static LPDIRECT3DTEXTURE9 m_pTexture[TEXTURE_MAX];
+	std::list<CNumber*> m_NumberList;
+	int m_nTextNum;
 };
-
 #endif
+

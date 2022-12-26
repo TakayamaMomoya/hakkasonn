@@ -12,6 +12,7 @@
 #include "manager.h"
 #include "game.h"
 #include "input.h"
+#include "number_manager.h"
 
 //マクロ定義
 #define SIGN_TEX				""										//テクスチャファイル名
@@ -225,8 +226,14 @@ void UpdateSignPolygon(Sign *pSign, int nCntSign)
 //==================================================================================================
 //設定処理
 //==================================================================================================
-void SetSign(D3DXVECTOR3 pos, SIGNTYPE type)
+void SetSign(D3DXVECTOR3 pos, SIGNTYPE type, int nDominoNumber)
 {
+	float fSize = 0.0f;
+	//ナンバーマネージャーの取得
+	CManager *pManager = GetManager();
+	CGame* pGame = (CGame*)pManager->GetGameObject();
+	CNumber_Manager* pNumber_Manager = pGame->GetNumber_Manager();
+
 	//情報取得
 	Sign *pSign = GetSign();
 
@@ -243,10 +250,10 @@ void SetSign(D3DXVECTOR3 pos, SIGNTYPE type)
 			switch (type)
 			{
 			case SIGNTYPE_10:
-
+				
 				pSign->width = 150;
 				pSign->height = 150;
-
+				
 				break;
 			case SIGNTYPE_50:
 
@@ -299,6 +306,8 @@ void SetSign(D3DXVECTOR3 pos, SIGNTYPE type)
 				0.0f
 			);
 
+			//ナンバーの生成
+			pNumber_Manager->SetNumber(D3DXVECTOR3(pos.x,pos.y - 100.0f,0.0f), nDominoNumber);
 			break;
 		}
 

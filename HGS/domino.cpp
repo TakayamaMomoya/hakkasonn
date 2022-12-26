@@ -340,15 +340,15 @@ void SetDomino(D3DXVECTOR3 pos)
 			{
 				if (nCntDomino % 100 == 0)
 				{
-					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f), SIGNTYPE_100);
+					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f), SIGNTYPE_100, nCntDomino);
 				}
 				else if (nCntDomino % 50 == 0)
 				{
-					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f), SIGNTYPE_50);
+					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f), SIGNTYPE_50, nCntDomino);
 				}
 				else if (nCntDomino % 10 == 0)
 				{//‚P‚OŒÂ‚²‚ÆŠÅ”Â•\Ž¦
-					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f),SIGNTYPE_10);
+					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f),SIGNTYPE_10, nCntDomino);
 				}
 			}
 

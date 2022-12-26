@@ -19,6 +19,7 @@
 #include "Score.h"
 #include "sign.h"
 #include "sound.h"
+#include "number_manager.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -193,6 +194,14 @@ HRESULT CGame::Init()
 
 
 	m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
+
+
+	m_pNumber_Manager = new CNumber_Manager;
+	if (FAILED(m_pNumber_Manager->Init()))
+	{
+		return -1;
+	}
+
 	return S_OK;
 }
 
@@ -239,6 +248,13 @@ void CGame::Uninit()
 		delete m_pFlowObject;
 		m_pFlowObject = nullptr;
 	}
+
+	if (m_pNumber_Manager != nullptr)
+	{
+		m_pNumber_Manager->Uninit();
+		delete m_pNumber_Manager;
+		m_pNumber_Manager = nullptr;
+	}
 }
 
 //*****************************************************************************
@@ -251,6 +267,7 @@ void CGame::Update()
 	if (g_gameState == GAMESTATE_DOWN)
 	{
 		m_pstone_bridge->Update();
+		m_pNumber_Manager->Update();
 	}
 
 
@@ -446,6 +463,9 @@ void CGame::Draw()
 
 	//看板描画
 	DrawSign();
+
+	//ナンバーマネージャー
+	m_pNumber_Manager->Draw();
 
 	//石橋
 	m_pstone_bridge->Draw();

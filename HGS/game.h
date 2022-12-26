@@ -47,6 +47,7 @@ typedef struct
 //*****************************************************************************
 class C2DPolygon;
 class CUI;
+class CNumber_Manager;
 
 //*****************************************************************************
 // —ñ‹“Œ^
@@ -77,6 +78,8 @@ public:
 	void Update() override;
 	void Draw() override;
 
+	CNumber_Manager* GetNumber_Manager() { return m_pNumber_Manager; }
+
 private:
 	C2DPolygon* m_pSea;
 	CUI* m_pBg;
@@ -84,7 +87,7 @@ private:
 	C2DPolygon* m_pstone_bridge;
 	C2DPolygon* m_pFlowObject;
 	int m_nText[TEXT_MAX];
-
+	CNumber_Manager* m_pNumber_Manager;
 
 
 

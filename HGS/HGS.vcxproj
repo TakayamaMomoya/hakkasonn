@@ -163,6 +163,8 @@
     <ClCompile Include="inputmouse.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
+    <ClCompile Include="number.cpp" />
+    <ClCompile Include="number_manager.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="read.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -188,6 +190,8 @@
     <ClInclude Include="inputmouse.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
+    <ClInclude Include="number.h" />
+    <ClInclude Include="number_manager.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="read.h" />
     <ClInclude Include="renderer.h" />
