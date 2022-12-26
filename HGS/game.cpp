@@ -158,6 +158,36 @@ HRESULT CGame::Init()
 
 	CManager::GetSound()->Play(CSound::SOUND_BGM_GAME);
 
+	m_pFlowObject = new C2DPolygon;
+	if (FAILED(m_pFlowObject->Init()))
+	{
+		return -1;
+	}
+	m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
+	m_pFlowObject->SetDiagonalLine(200.0f, 200.0f);
+	m_pFlowObject->SetPolygon();
+	m_pFlowObject->SetMove(D3DXVECTOR3(-3.0f,0.0f,0.0f));
+
+	m_nText[0] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨01.png");
+	m_nText[1] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨02.png");
+	m_nText[2] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨03.png");
+	m_nText[3] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨04.png");
+	m_nText[4] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨05.png");
+	m_nText[5] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨06.png");
+	m_nText[6] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨07.png");
+	m_nText[7] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨08.png");
+	m_nText[8] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨09.png");
+	m_nText[9] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨010.png");
+	m_nText[10] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨11.png");
+	m_nText[11] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨12.png");
+	m_nText[12] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨13.png");
+	m_nText[13] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨14.png");
+	m_nText[14] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨15.png");
+	m_nText[15] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨16.png");
+	m_nText[16] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨17.png");
+
+
+	m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
 	return S_OK;
 }
 
@@ -195,6 +225,12 @@ void CGame::Uninit()
 		delete m_pBg;
 		m_pBg = nullptr;
 	}
+	if (m_pFlowObject != nullptr)
+	{
+		m_pFlowObject->Uninit();
+		delete m_pFlowObject;
+		m_pFlowObject = nullptr;
+	}
 }
 
 //*****************************************************************************
@@ -202,6 +238,7 @@ void CGame::Uninit()
 //*****************************************************************************
 void CGame::Update()
 {
+	m_pFlowObject->Update();
 	m_pBg->Update();
 	if (g_gameState == GAMESTATE_DOWN)
 	{
@@ -321,6 +358,13 @@ void CGame::Update()
 		pHand->state = HANDSTATE_PUSH;
 	}
 
+	if (m_pFlowObject->GetPos().x < -300.0f)
+	{
+		m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
+		m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
+	}
+
+
 	if (g_gameState == GAMESTATE_END)
 	{//ƒQ[ƒ€I—¹‚È‚çŒˆ’èƒ{ƒ^ƒ“‚Å‘JˆÚ
 		SetScore(g_PushState.nPushCount);
@@ -357,6 +401,9 @@ void CGame::Draw()
 {
 	//”wŒi•`‰æ
 	m_pBg->Draw();
+
+	//•Y—¬•¨
+	m_pFlowObject->Draw();
 
 	if (g_gameState == GAMESTATE_PUSH)
 	{//ƒ{ƒ^ƒ“•`‰æ
