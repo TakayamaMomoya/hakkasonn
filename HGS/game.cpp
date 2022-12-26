@@ -163,6 +163,36 @@ HRESULT CGame::Init()
 
 	CManager::GetSound()->Play(CSound::SOUND_BGM_GAME);
 
+	m_pFlowObject = new C2DPolygon;
+	if (FAILED(m_pFlowObject->Init()))
+	{
+		return -1;
+	}
+	m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
+	m_pFlowObject->SetDiagonalLine(200.0f, 200.0f);
+	m_pFlowObject->SetPolygon();
+	m_pFlowObject->SetMove(D3DXVECTOR3(-3.0f,0.0f,0.0f));
+
+	m_nText[0] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®01.png");
+	m_nText[1] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®02.png");
+	m_nText[2] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®03.png");
+	m_nText[3] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®04.png");
+	m_nText[4] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®05.png");
+	m_nText[5] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®06.png");
+	m_nText[6] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®07.png");
+	m_nText[7] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®08.png");
+	m_nText[8] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®09.png");
+	m_nText[9] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®010.png");
+	m_nText[10] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®11.png");
+	m_nText[11] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®12.png");
+	m_nText[12] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®13.png");
+	m_nText[13] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®14.png");
+	m_nText[14] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®15.png");
+	m_nText[15] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®16.png");
+	m_nText[16] = CTexture::LoadTexture("data\\TEXTURE\\ïYó¨ï®17.png");
+
+
+	m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
 	return S_OK;
 }
 
@@ -203,6 +233,12 @@ void CGame::Uninit()
 		delete m_pBg;
 		m_pBg = nullptr;
 	}
+	if (m_pFlowObject != nullptr)
+	{
+		m_pFlowObject->Uninit();
+		delete m_pFlowObject;
+		m_pFlowObject = nullptr;
+	}
 }
 
 //*****************************************************************************
@@ -210,12 +246,17 @@ void CGame::Uninit()
 //*****************************************************************************
 void CGame::Update()
 {
+	m_pFlowObject->Update();
 	m_pBg->Update();
 	if (g_gameState == GAMESTATE_DOWN)
 	{
 		m_pstone_bridge->Update();
 	}
-
+	if (g_gameState == GAMESTATE_END)
+	{
+		//ÉXÉRÉAçXêV
+		UpdateScore();
+	}
 
 	if (g_PushState.nColorCount <= 0)
 	{
@@ -349,6 +390,13 @@ void CGame::Update()
 		SetGameState(GAMESTATE_END);
 	}
 
+	if (m_pFlowObject->GetPos().x < -300.0f)
+	{
+		m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
+		m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
+	}
+
+
 	if (g_gameState == GAMESTATE_END)
 	{//ÉQÅ[ÉÄèIóπÇ»ÇÁåàíËÉ{É^ÉìÇ≈ëJà⁄
 		SetScore(g_PushState.nPushCount);
@@ -385,6 +433,9 @@ void CGame::Draw()
 {
 	//îwåiï`âÊ
 	m_pBg->Draw();
+
+	//ïYó¨ï®
+	m_pFlowObject->Draw();
 
 	if (g_gameState == GAMESTATE_PUSH)
 	{//É{É^Éìï`âÊ
@@ -431,4 +482,11 @@ GAMESTATE GetGameState(void)
 void SetGameState(GAMESTATE state)
 {
 	g_gameState = state;
+}
+//*****************************************************************************
+// ÉXÉRÉAÇ»Ç«ÇÃéÊìæ
+//*****************************************************************************
+PUSHSTATE*GetPushState()
+{
+	return &g_PushState;
 }

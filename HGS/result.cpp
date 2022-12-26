@@ -15,6 +15,7 @@
 #include "input.h"
 #include "manager.h"
 #include "sound.h"
+#include "ranking.h"
 
 //*****************************************************************************
 // コンストラクタ
@@ -35,6 +36,7 @@ CResult::~CResult()
 //*****************************************************************************
 HRESULT CResult::Init()
 {
+	InitRanking();
 	//nullptr
 	m_pUi = nullptr;
 
@@ -68,7 +70,7 @@ HRESULT CResult::Init()
 void CResult::Uninit()
 {
 	CManager::GetSound()->Stop(CSound::SOUND_BGM_RESULT);
-
+	UninitRanking();
 	//UiRelease
 	if (m_pUi != nullptr)
 	{
@@ -90,6 +92,8 @@ void CResult::Update()
 	//GetInput
 	CInput *pInput = CInput::GetKey();
 
+	UpdateRanking();
+
 	//EndResult
 	if (pInput->Trigger(KEY_DECISION))
 	{
@@ -105,4 +109,5 @@ void CResult::Draw()
 {
 	//UiDraw
 	m_pUi->Draw();
+	DrawRanking();
 }
