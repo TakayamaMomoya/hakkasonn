@@ -207,7 +207,7 @@ void CGame::Update()
 	{
 		m_pstone_bridge->Update();
 	}
-	
+
 
 	if (g_PushState.nColorCount <= 0)
 	{
@@ -254,7 +254,8 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
 		{
@@ -265,7 +266,8 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
 		{
@@ -276,7 +278,8 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
 		{
@@ -287,10 +290,12 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
-		}
-	}
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
+			}
 
+		}
+
+	}
 	m_pButton->Update();
 
 	//ƒhƒ~ƒmî•ñæ“¾
