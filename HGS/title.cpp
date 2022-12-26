@@ -119,7 +119,7 @@ void CTitle::Uninit()
 void CTitle::Update()
 {
 	//カウンタ加算
-	//g_nCounterFadeTitle++;
+	g_nCounterFadeTitle++;
 
 	//ドミノ更新
 	UpdateTitleDomino();
@@ -138,11 +138,11 @@ void CTitle::Update()
 	}
 
 	//ランキングへの自動遷移
-	/*if (g_nCounterFadeTitle > FADE_TIMER)
+	if (g_nCounterFadeTitle > FADE_TIMER)
 	{
 		CManager * pManager = GetManager();
 		pManager->NextMode(TYPE_RESULT);
-	}*/
+	}
 }
 
 //*****************************************************************************

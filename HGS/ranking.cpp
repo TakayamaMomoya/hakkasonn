@@ -12,8 +12,8 @@
 #define INTERVAL (30)
 
 //プロトタイプ宣言
-
 int Sort();
+
 //グローバル変数
 int g_nRanking[MAX_NUMBER];
 int g_nRankingPoint[MAX_NUMBER];
@@ -31,7 +31,6 @@ D3DXVECTOR3 g_posPcoreRanking;
 //======================================
 void InitRanking(void)
 {
-
 	//デバイスの取得
 	CManager *pManager = GetManager();
 
@@ -107,6 +106,12 @@ void InitRanking(void)
 //======================================
 void UninitRanking(void)
 {
+	//情報取得
+	PUSHSTATE*pPushState = GetPushState();
+
+	//カウント破棄
+	pPushState->nPushCount = 0;
+
 	if (g_pTextureRanking != NULL)
 	{
 		g_pTextureRanking->Release();

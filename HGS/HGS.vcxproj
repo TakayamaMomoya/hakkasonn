@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2dpolygon.cpp" />
+    <ClCompile Include="countdown.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="domino.cpp" />
     <ClCompile Include="fade.cpp" />
@@ -175,10 +176,12 @@
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="title.cpp" />
+    <ClCompile Include="tutorial.cpp" />
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2dpolygon.h" />
+    <ClInclude Include="countdown.h" />
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="domino.h" />
     <ClInclude Include="fade.h" />
@@ -204,6 +207,7 @@
     <ClInclude Include="sound.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="title.h" />
+    <ClInclude Include="tutorial.h" />
     <ClInclude Include="ui.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
