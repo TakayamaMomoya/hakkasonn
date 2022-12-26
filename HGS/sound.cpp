@@ -19,6 +19,7 @@ const CSound::PARAM CSound::param[] =
 	{ "Data/BGM/cooking.wav",-1 },							//タイトル
 	{ "Data/BGM/noisy_daily_life.wav",-1 },					//ゲーム
 	{ "Data/BGM/Relax_Marimba_M249.wav",-1 },				//リザルト
+	{ "Data/SE/snare03.wav",0 },							//連打音
 };
 
 //サウンドパラメーター情報が足りなかったときにエラーを出す処理（デバック用）
