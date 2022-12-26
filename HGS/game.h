@@ -81,6 +81,7 @@ private:
 	C2DPolygon* m_pSea;
 	CUI* m_pBg;
 	C2DPolygon* m_pButton;
+	C2DPolygon* m_pstone_bridge;
 
 
 
