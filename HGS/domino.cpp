@@ -18,12 +18,20 @@
 #define ROLL_LIMIT				(D3DX_PI * 0.35f)						//倒れきる角度
 #define POS_LIMIT_Y				(SCREEN_HEIGHT * 0.66f)					//ドミノの到達地点
 #define DOMINO_FACT				(0.1f)									//ドミノの係数
+#define NUM_COL					(4)										//色の種類
 
 //グローバル変数宣言
 LPDIRECT3DTEXTURE9 g_apTextureDomino[DOMINOTYPE_MAX] = {};				//テクスチャへのポインタ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffDomino = NULL;						//頂点バッファへのポインタ
 Domino g_aDomino[MAX_DOMINO];											//構造体
-int g_nDominoNum;													//敵の総数
+int g_nDominoNum;														//敵の総数
+static const D3DXCOLOR COL_DOMINO[NUM_COL] =
+{
+	{ 1.0f,0.0f,0.0f,1.0f },	//赤
+	{ 1.0f,1.0f,0.0f,1.0f },	//黄色
+	{ 0.0f,0.0f,1.0f,1.0f },	//青
+	{ 0.0f,1.0f,0.0f,1.0f }		//緑
+};																		//色の種類
 
 //プロトタイプ宣言
 void UpdateDominoPos(Domino *pDomino);
@@ -149,11 +157,6 @@ void UpdateDomino(void)
 
 	//インプットのポインタを宣言
 	CInput *pInput = CInput::GetKey();
-
-	if (pDomino->state == DOMINOSTATE_NORMAL)
-	{//最初のドミノが倒れる
-		//pDomino->state = DOMINOSTATE_DOWN;
-	}
 
 	for (int nCntDomino = 0; nCntDomino < MAX_DOMINO; nCntDomino++, pDomino++)
 	{//全てをチェックする
@@ -323,6 +326,15 @@ void SetDomino(D3DXVECTOR3 pos)
 				0.0f
 			);
 
+			//色設定
+			int nCol = rand() % NUM_COL;
+
+			//頂点カラーの設定
+			pVtx[0].col = COL_DOMINO[nCol];
+			pVtx[1].col = COL_DOMINO[nCol];
+			pVtx[2].col = COL_DOMINO[nCol];
+			pVtx[3].col = COL_DOMINO[nCol];
+
 			g_nDominoNum++;
 
 			break;
@@ -365,7 +377,7 @@ void DrawDomino(void)
 		{//使用している状態なら
 
 			//テクスチャ設定
-			pDevice->SetTexture(0, g_apTextureDomino[0]);
+			pDevice->SetTexture(0, NULL);
 
 			//ポリゴンの描画
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, nCntDomino * 4, 2);
