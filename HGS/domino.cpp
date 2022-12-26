@@ -15,7 +15,7 @@
 
 //マクロ定義
 #define DOMINO_TEX				""										//テクスチャファイル名
-#define ROLL_SPEED				(-0.16f)								//回転スピード
+#define ROLL_SPEED				(-0.09f)								//回転スピード
 #define ROLL_LIMIT				(D3DX_PI * 0.35f)						//倒れきる角度
 #define POS_LIMIT_Y				(SCREEN_HEIGHT * 0.82f)					//ドミノの到達地点
 #define DOMINO_FACT				(0.1f)									//ドミノの係数
@@ -180,6 +180,48 @@ void UpdateDomino(void)
 }
 
 //==================================================================================================
+//タイトル版処理
+//==================================================================================================
+void UpdateTitleDomino(void)
+{
+	//ポインタ宣言
+	Domino *pDomino = GetDomino();
+
+	//インプットのポインタを宣言
+	CInput *pInput = CInput::GetKey();
+
+	for (int nCntDomino = 0; nCntDomino < MAX_DOMINO; nCntDomino++)
+	{//全てをチェックする
+		if (pDomino[nCntDomino].bUse)
+		{//使用している状態なら
+
+			//位置更新処理
+			UpdateDominoPos(&pDomino[nCntDomino]);
+
+			//ポリゴン更新処理
+			UpdateDominoPolygon(&pDomino[nCntDomino], nCntDomino);
+
+			//状態更新処理
+			ManageStateDomino(&pDomino[nCntDomino]);
+
+			pDomino[nCntDomino].posWorld.x -= 12.5f;
+
+			if (nCntDomino >= MAX_DOMINO - 1)
+			{//最大数のドミノが画面内に入ったら
+				if (pDomino[nCntDomino].pos.x < SCREEN_WIDTH)
+				{
+					//ドミノ召喚
+					for (int nCntDomino = 0; nCntDomino < MAX_DOMINO; nCntDomino++)
+					{
+						SetDomino(D3DXVECTOR3(SCREEN_WIDTH + nCntDomino * DOMINO_WIDTH * 2.5f, SCREEN_HEIGHT * 0.82f, 0.0f));
+					}
+				}
+			}
+		}
+	}
+}
+
+//==================================================================================================
 //位置更新処理
 //==================================================================================================
 void UpdateDominoPos(Domino *pDomino)
@@ -295,6 +337,10 @@ void SetDomino(D3DXVECTOR3 pos)
 			pDomino->posWorld = pos;
 			pDomino->pos = pos;
 
+			//変数初期化
+			pDomino->rot = D3DXVECTOR3(0.0f,0.0f,0.0f);
+			pDomino->state = DOMINOSTATE_NORMAL;
+
 			//使用状態にする
 			pDomino->bUse = true;
 
@@ -336,19 +382,19 @@ void SetDomino(D3DXVECTOR3 pos)
 			pVtx[2].col = COL_DOMINO[nCol];
 			pVtx[3].col = COL_DOMINO[nCol];
 
-			if (nCntDomino != 0)
+			if (nCntDomino != 0 && GetGameState() == GAMESTATE_PUSH)
 			{
 				if (nCntDomino % 100 == 0)
 				{
-					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f), SIGNTYPE_100);
+					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f), SIGNTYPE_100, nCntDomino);
 				}
 				else if (nCntDomino % 50 == 0)
 				{
-					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f), SIGNTYPE_50);
+					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f), SIGNTYPE_50, nCntDomino);
 				}
 				else if (nCntDomino % 10 == 0)
 				{//１０個ごと看板表示
-					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f),SIGNTYPE_10);
+					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f),SIGNTYPE_10, nCntDomino);
 				}
 			}
 

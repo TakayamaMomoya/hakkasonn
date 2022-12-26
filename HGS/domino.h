@@ -11,7 +11,7 @@
 #include "main.h"
 
 //ƒ}ƒNƒ’è‹`
-#define MAX_DOMINO				(1024)									//Å‘å”
+#define MAX_DOMINO				(2048)									//Å‘å”
 #define DOMINO_HEIGHT			(300)									//‚‚³
 #define DOMINO_WIDTH			(60)									//•
 
@@ -51,6 +51,7 @@ typedef struct
 void InitDomino(void);
 void UninitDomino(void);
 void UpdateDomino(void);
+void UpdateTitleDomino(void);
 void DrawDomino(void);
 void SetDomino(D3DXVECTOR3 pos);
 Domino *GetDomino(void);

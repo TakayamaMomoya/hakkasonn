@@ -21,12 +21,13 @@
 #include "sound.h"
 #include "tutorial.h"
 #include "countdown.h"
+#include "number_manager.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
 #define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
-#define SCROLL_SPEED			(22.0f)					//スクロールスピード
+#define SCROLL_SPEED			(11.0f)					//スクロールスピード
 #define MAX_TIME (3)
 #define TIMELIMIT (20)
 #define CLOSSKEY (4)
@@ -199,6 +200,14 @@ HRESULT CGame::Init()
 
 
 	m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
+
+
+	m_pNumber_Manager = new CNumber_Manager;
+	if (FAILED(m_pNumber_Manager->Init()))
+	{
+		return -1;
+	}
+
 	return S_OK;
 }
 
@@ -225,6 +234,8 @@ void CGame::Uninit()
 	UninitCountDown();
 	UninitTutorial();
 
+	g_posWorld = { 0.0f,0.0f,0.0f };
+
 	if (m_pButton != nullptr)
 	{
 		m_pButton->Uninit();
@@ -249,6 +260,13 @@ void CGame::Uninit()
 		delete m_pFlowObject;
 		m_pFlowObject = nullptr;
 	}
+
+	if (m_pNumber_Manager != nullptr)
+	{
+		m_pNumber_Manager->Uninit();
+		delete m_pNumber_Manager;
+		m_pNumber_Manager = nullptr;
+	}
 }
 
 //*****************************************************************************
@@ -261,6 +279,7 @@ void CGame::Update()
 	{
 		UpdateTutorial();
 		UpdateCountDown();
+		m_pNumber_Manager->Update();
 	}
 	else
 	{
@@ -471,6 +490,9 @@ void CGame::Draw()
 
 	//看板描画
 	DrawSign();
+
+	//ナンバーマネージャー
+	m_pNumber_Manager->Draw();
 
 	//石橋
 	m_pstone_bridge->Draw();

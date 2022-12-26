@@ -42,7 +42,7 @@ void InitSign(void);
 void UninitSign(void);
 void UpdateSign(void);
 void DrawSign(void);
-void SetSign(D3DXVECTOR3 pos,SIGNTYPE type);
+void SetSign(D3DXVECTOR3 pos,SIGNTYPE type,int nDominoNumber);
 Sign *GetSign(void);
 int GetSignNum(void);
 
