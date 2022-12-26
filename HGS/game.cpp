@@ -192,7 +192,7 @@ HRESULT CGame::Init()
 	m_nText[15] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨16.png");
 	m_nText[16] = CTexture::LoadTexture("data\\TEXTURE\\•Y—¬•¨17.png");
 
-
+	
 	m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
 
 
