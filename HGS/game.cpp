@@ -438,20 +438,21 @@ void CGame::Update()
 
 
 
-	if (g_gameState == GAMESTATE_END)
-	{//ゲーム終了なら決定ボタンで遷移
+		if (g_gameState == GAMESTATE_END)
+		{//ゲーム終了なら決定ボタンで遷移
 
-		//スコア設定
-		SetScore(g_PushState.nPushCount);
+			//スコア設定
+			SetScore(g_PushState.nPushCount);
 
-		if (pInput->Trigger(KEY_DECISION) || FADE_TIMER < g_nCntFadeGame)
-		{//画面遷移
-			CManager * pManager = GetManager();
-			pManager->NextMode(TYPE_RESULT);
+			if (pInput->Trigger(KEY_DECISION) || FADE_TIMER < g_nCntFadeGame)
+			{//画面遷移
+				CManager * pManager = GetManager();
+				pManager->NextMode(TYPE_RESULT);
+			}
+
+			//カウンタ加算
+			g_nCntFadeGame++;
 		}
-
-		//カウンタ加算
-		g_nCntFadeGame++;
 	}
 }
 
