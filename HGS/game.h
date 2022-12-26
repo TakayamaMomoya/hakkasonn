@@ -101,6 +101,6 @@ private:
 D3DXVECTOR3 *GetPosWorld(void);
 GAMESTATE GetGameState(void);
 void SetGameState(GAMESTATE state);
-
+PUSHSTATE*GetPushState();
 
 #endif

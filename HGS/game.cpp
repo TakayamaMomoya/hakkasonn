@@ -27,7 +27,7 @@
 #define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
 #define SCROLL_SPEED			(22.0f)					//スクロールスピード
 #define MAX_TIME (3)
-#define TIMELIMIT (20)
+#define TIMELIMIT (2)
 #define CLOSSKEY (4)
 
 //*****************************************************************************
@@ -269,7 +269,11 @@ void CGame::Update()
 		m_pstone_bridge->Update();
 		m_pNumber_Manager->Update();
 	}
-
+	if (g_gameState == GAMESTATE_END)
+	{
+		//スコア更新
+		UpdateScore();
+	}
 
 	if (g_PushState.nColorCount <= 0)
 	{
@@ -498,4 +502,11 @@ GAMESTATE GetGameState(void)
 void SetGameState(GAMESTATE state)
 {
 	g_gameState = state;
+}
+//*****************************************************************************
+// スコアなどの取得
+//*****************************************************************************
+PUSHSTATE*GetPushState()
+{
+	return &g_PushState;
 }

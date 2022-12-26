@@ -180,6 +180,48 @@ void UpdateDomino(void)
 }
 
 //==================================================================================================
+//タイトル版処理
+//==================================================================================================
+void UpdateTitleDomino(void)
+{
+	//ポインタ宣言
+	Domino *pDomino = GetDomino();
+
+	//インプットのポインタを宣言
+	CInput *pInput = CInput::GetKey();
+
+	for (int nCntDomino = 0; nCntDomino < MAX_DOMINO; nCntDomino++)
+	{//全てをチェックする
+		if (pDomino[nCntDomino].bUse)
+		{//使用している状態なら
+
+			//位置更新処理
+			UpdateDominoPos(&pDomino[nCntDomino]);
+
+			//ポリゴン更新処理
+			UpdateDominoPolygon(&pDomino[nCntDomino], nCntDomino);
+
+			//状態更新処理
+			ManageStateDomino(&pDomino[nCntDomino]);
+
+			pDomino[nCntDomino].posWorld.x -= 25.0f;
+
+			if (nCntDomino >= MAX_DOMINO - 1)
+			{//最大数のドミノが画面内に入ったら
+				if (pDomino[nCntDomino].pos.x < SCREEN_WIDTH)
+				{
+					//ドミノ召喚
+					for (int nCntDomino = 0; nCntDomino < MAX_DOMINO; nCntDomino++)
+					{
+						SetDomino(D3DXVECTOR3(SCREEN_WIDTH + nCntDomino * DOMINO_WIDTH * 2.5f, SCREEN_HEIGHT * 0.82f, 0.0f));
+					}
+				}
+			}
+		}
+	}
+}
+
+//==================================================================================================
 //位置更新処理
 //==================================================================================================
 void UpdateDominoPos(Domino *pDomino)
@@ -295,6 +337,10 @@ void SetDomino(D3DXVECTOR3 pos)
 			pDomino->posWorld = pos;
 			pDomino->pos = pos;
 
+			//変数初期化
+			pDomino->rot = D3DXVECTOR3(0.0f,0.0f,0.0f);
+			pDomino->state = DOMINOSTATE_NORMAL;
+
 			//使用状態にする
 			pDomino->bUse = true;
 
@@ -336,7 +382,7 @@ void SetDomino(D3DXVECTOR3 pos)
 			pVtx[2].col = COL_DOMINO[nCol];
 			pVtx[3].col = COL_DOMINO[nCol];
 
-			if (nCntDomino != 0)
+			if (nCntDomino != 0 && GetGameState() == GAMESTATE_PUSH)
 			{
 				if (nCntDomino % 100 == 0)
 				{
