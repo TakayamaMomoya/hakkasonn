@@ -14,6 +14,7 @@
 #include "texture.h"
 #include "ui.h"
 #include "domino.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -129,6 +130,8 @@ HRESULT CGame::Init()
 	pPolygon[3].SetUVMove(D3DXVECTOR2(0.0005f, 0.0f));
 	pPolygon[3].SetPolygon();
 
+	CManager::GetSound()->Play(CSound::SOUND_BGM_GAME);
+
 	return S_OK;
 }
 
@@ -137,6 +140,8 @@ HRESULT CGame::Init()
 //*****************************************************************************
 void CGame::Uninit()
 {
+	CManager::GetSound()->Stop(CSound::SOUND_BGM_GAME);
+
 	//ドミノ終了
 	UninitDomino();
 
