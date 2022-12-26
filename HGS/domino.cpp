@@ -12,6 +12,7 @@
 #include "game.h"
 #include "input.h"
 #include "sign.h"
+#include "sound.h"
 
 //マクロ定義
 #define DOMINO_TEX				""										//テクスチャファイル名
@@ -294,6 +295,8 @@ void ManageStateDomino(Domino *pDomino)
 		if (pDomino->rot.z < -ROLL_LIMIT && pDomino[1].bUse)
 		{
 			pDomino->state = DOMINOSTATE_END;
+			//サウンド(SE)の再生
+			CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 			pDomino[1].state = DOMINOSTATE_DOWN;
 		}
 		else if (pDomino->rot.z < -D3DX_PI * 0.5f && pDomino[1].bUse == false)

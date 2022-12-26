@@ -424,8 +424,6 @@ void CGame::Update()
 
 			pHand->state = HANDSTATE_PUSH;
 
-			//ƒTƒEƒ“ƒh(SE)‚ÌÄ¶
-			CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 		}
 
 		if (g_gameState == GAMESTATE_DOWN && GetDominoNum() == 0)
@@ -442,7 +440,6 @@ void CGame::Update()
 			m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
 			m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
 		}
-
 
 
 		if (g_gameState == GAMESTATE_END)
