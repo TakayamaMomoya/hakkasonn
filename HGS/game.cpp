@@ -14,13 +14,14 @@
 #include "texture.h"
 #include "ui.h"
 #include "domino.h"
+#include "sound.h"
 #include "hand.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define DOMINO_SPACE			(50)					//ドミノ同士の間隔
-#define SCROLL_SPEED			(8.0f)					//スクロールスピード
+#define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
+#define SCROLL_SPEED			(22.0f)					//スクロールスピード
 #define MAX_TIME (3)
 #define TIMELIMIT (10)
 #define CLOSSKEY (4)
@@ -151,6 +152,8 @@ HRESULT CGame::Init()
 	m_pstone_bridge->SetPolygon();
 
 
+	CManager::GetSound()->Play(CSound::SOUND_BGM_GAME);
+
 	return S_OK;
 }
 
@@ -159,6 +162,8 @@ HRESULT CGame::Init()
 //*****************************************************************************
 void CGame::Uninit()
 {
+	CManager::GetSound()->Stop(CSound::SOUND_BGM_GAME);
+
 	//ドミノ終了
 	UninitDomino();
 
@@ -223,7 +228,11 @@ void CGame::Update()
 	//GetInput
 	CInput *pInput = CInput::GetKey();
 
-	if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
+	//===============================================
+	//目標ボタンが押されているかの判定
+if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
+{
+	if (g_PushState.NowTargetButton == TARGETBUTTON_UP)
 	{
 		//===============================================
 		//目標ボタンが押されているかの判定
@@ -236,9 +245,8 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
-			}
-		}
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+}		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
 		{
 			m_pButton->SetPos(POS_DOWN);
@@ -248,8 +256,7 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
-			}
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
 		{
@@ -260,8 +267,7 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
-			}
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
 		{
@@ -304,7 +310,6 @@ void CGame::Update()
 			pManager->NextMode(TYPE_RESULT);
 		}
 	}
-
 }
 
 //*****************************************************************************

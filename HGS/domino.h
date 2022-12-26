@@ -12,6 +12,8 @@
 
 //É}ÉNÉçíËã`
 #define MAX_DOMINO			(128)											//ìGÇÃç≈ëÂêî
+#define DOMINO_HEIGHT			(300)									//çÇÇ≥
+#define DOMINO_WIDTH			(60)									//ïù
 
 static const DWORD FVF_VERTEX_2D = (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1);
 

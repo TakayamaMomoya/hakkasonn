@@ -14,11 +14,9 @@
 
 //マクロ定義
 #define DOMINO_TEX				""										//テクスチャファイル名
-#define DOMINO_HEIGHT			(100)									//高さ
-#define DOMINO_WIDTH			(20)									//幅
 #define ROLL_SPEED				(-0.16f)								//回転スピード
 #define ROLL_LIMIT				(D3DX_PI * 0.35f)						//倒れきる角度
-#define POS_LIMIT_Y				(SCREEN_HEIGHT * 0.5f)					//ドミノの到達地点
+#define POS_LIMIT_Y				(SCREEN_HEIGHT * 0.66f)					//ドミノの到達地点
 #define DOMINO_FACT				(0.1f)									//ドミノの係数
 
 //グローバル変数宣言

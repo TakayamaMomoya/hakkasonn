@@ -16,6 +16,12 @@
 #include "input.h"
 #include "texture.h"
 #include "fade.h"
+#include "sound.h"
+
+//*****************************************************************************
+// 静的メンバ変数の宣言
+//*****************************************************************************
+CSound *CManager::m_pSound;
 
 //*****************************************************************************
 // コンストラクタ
@@ -50,6 +56,13 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, bool bWindow)
 	m_pInput = CInput::Create();
 	//入力処理の初期化処理
 	if (FAILED(m_pInput->Init(hInstance, hWnd)))
+	{
+		return E_FAIL;
+	}
+
+	m_pSound = new CSound;
+	//サウンドの初期化処理
+	if (FAILED(m_pSound->Init()))
 	{
 		return E_FAIL;
 	}
@@ -109,6 +122,14 @@ void CManager::Uninit()
 		m_pFade->Uninit();
 		delete m_pFade;
 		m_pFade = nullptr;
+	}
+
+	if (m_pSound != nullptr)
+	{
+		// 終了処理
+		m_pSound->Uninit();
+		delete m_pSound;
+		m_pSound = nullptr;
 	}
 }
 

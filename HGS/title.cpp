@@ -13,6 +13,7 @@
 #include "input.h"
 #include "texture.h"
 #include "ui.h"
+#include "sound.h"
 
 
 //*****************************************************************************
@@ -56,6 +57,10 @@ HRESULT CTitle::Init()
 	pPolygon[0].SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
 	pPolygon[0].SetDiagonalLine(200.0f, 200.0f);
 	pPolygon[0].SetPolygon();
+
+	//サウンドの再生
+	CManager::GetSound()->Play(CSound::SOUND_BGM_TITLE);
+
 	return S_OK;
 }
 
@@ -64,6 +69,9 @@ HRESULT CTitle::Init()
 //*****************************************************************************
 void CTitle::Uninit()
 {
+	//サウンドの停止
+	CManager::GetSound()->Stop(CSound::SOUND_BGM_TITLE);
+
 	//UiRelease
 	if (m_pUi != nullptr)
 	{
