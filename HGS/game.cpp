@@ -207,7 +207,11 @@ void CGame::Update()
 	{
 		m_pstone_bridge->Update();
 	}
-
+	if (g_gameState == GAMESTATE_END)
+	{
+		//スコア更新
+		UpdateScore();
+	}
 
 	if (g_PushState.nColorCount <= 0)
 	{
@@ -400,4 +404,11 @@ GAMESTATE GetGameState(void)
 void SetGameState(GAMESTATE state)
 {
 	g_gameState = state;
+}
+//*****************************************************************************
+// スコアなどの取得
+//*****************************************************************************
+PUSHSTATE*GetPushState()
+{
+	return &g_PushState;
 }

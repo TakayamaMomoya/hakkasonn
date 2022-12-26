@@ -109,7 +109,7 @@ void UpdateScore(void)
 	int aTexU[NUM_PLACE];
 	VERTEX_2D *pVtx;
 	
-	g_nScore += (g_nScorePoint - g_nScore) / 20;
+	g_nScore += (g_nScorePoint - g_nScore) / 50;
 	g_nScore++;
 	if (g_nScore >= g_nScorePoint)
 	{
@@ -133,6 +133,7 @@ void UpdateScore(void)
 	}
 	
 	g_pVtxBuffScore->Unlock();
+	
 }
 
 //======================================
@@ -169,29 +170,7 @@ void DrawScore(void)
 //======================================
 void SetScore(int nScore)
 {
-	
-	int nCntScore;
-	VERTEX_2D *pVtx;
-	int aTexU[NUM_PLACE];
-	g_nScore = nScore;
-
-	
-	aTexU[0] = g_nScore % 1000 / 100;
-	aTexU[1] = g_nScore % 100 / 10;
-	aTexU[2] = g_nScore % 10 / 1;
-
-	g_pVtxBuffScore->Lock(0, 0, (void**)&pVtx, 0);
-
-	for (nCntScore = 0; nCntScore < NUM_PLACE; nCntScore++)
-	{
-		pVtx[0].tex = D3DXVECTOR2((0.1f * aTexU[nCntScore]), 0.0f);
-		pVtx[1].tex = D3DXVECTOR2((0.1f * aTexU[nCntScore]) + 0.1f, 0.0f);
-		pVtx[2].tex = D3DXVECTOR2((0.1f * aTexU[nCntScore]), 1.0f);
-		pVtx[3].tex = D3DXVECTOR2((0.1f * aTexU[nCntScore]) + 0.1f, 1.0f);
-	
-		pVtx += 4;
-	}
-	g_pVtxBuffScore->Unlock();
+	g_nScorePoint = nScore;
 }
 
 
