@@ -206,13 +206,17 @@ void UpdateTitleDomino(void)
 
 			pDomino[nCntDomino].posWorld.x -= 25.0f;
 
-			//if (nCntDomino >= MAX_DOMINO)
-			//{//最大数のドミノが画面内に入ったら
-			//	if (pDomino[nCntDomino].state == DOMINOSTATE_END && pDomino[0].state == DOMINOSTATE_NORMAL)
-			//	{//最初のドミノを倒す
-			//		pDomino[0].state = DOMINOSTATE_DOWN;
-			//	}
-			//}
+			if (nCntDomino >= MAX_DOMINO - 1)
+			{//最大数のドミノが画面内に入ったら
+				if (pDomino[nCntDomino].pos.x < SCREEN_WIDTH)
+				{
+					//ドミノ召喚
+					for (int nCntDomino = 0; nCntDomino < MAX_DOMINO; nCntDomino++)
+					{
+						SetDomino(D3DXVECTOR3(SCREEN_WIDTH + nCntDomino * DOMINO_WIDTH * 2.5f, SCREEN_HEIGHT * 0.82f, 0.0f));
+					}
+				}
+			}
 		}
 	}
 }

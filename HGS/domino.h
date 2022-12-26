@@ -11,7 +11,7 @@
 #include "main.h"
 
 //ƒ}ƒNƒ’è‹`
-#define MAX_DOMINO				(1024)									//Å‘å”
+#define MAX_DOMINO				(2048)									//Å‘å”
 #define DOMINO_HEIGHT			(300)									//‚‚³
 #define DOMINO_WIDTH			(60)									//•
 
