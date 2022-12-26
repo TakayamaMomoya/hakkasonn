@@ -14,10 +14,10 @@
 
 //マクロ定義
 #define DOMINO_TEX				""										//テクスチャファイル名
-#define DOMINO_HEIGHT			(100)									//高さ
-#define DOMINO_WIDTH			(20)									//幅
-#define ROLL_SPEED				(-0.16f)									//回転スピード
+#define ROLL_SPEED				(-0.16f)								//回転スピード
 #define ROLL_LIMIT				(D3DX_PI * 0.35f)						//倒れきる角度
+#define POS_LIMIT_Y				(SCREEN_HEIGHT * 0.66f)					//ドミノの到達地点
+#define DOMINO_FACT				(0.1f)									//ドミノの係数
 
 //グローバル変数宣言
 LPDIRECT3DTEXTURE9 g_apTextureDomino[DOMINOTYPE_MAX] = {};				//テクスチャへのポインタ
@@ -152,7 +152,7 @@ void UpdateDomino(void)
 
 	if (pDomino->state == DOMINOSTATE_NORMAL)
 	{//最初のドミノが倒れる
-		pDomino->state = DOMINOSTATE_DOWN;
+		//pDomino->state = DOMINOSTATE_DOWN;
 	}
 
 	for (int nCntDomino = 0; nCntDomino < MAX_DOMINO; nCntDomino++, pDomino++)
@@ -182,6 +182,8 @@ void UpdateDominoPos(Domino *pDomino)
 {
 	//相対位置設定
 	pDomino->pos = *GetPosWorld() + pDomino->posWorld;
+
+	pDomino->posWorld.y += (POS_LIMIT_Y - pDomino->posWorld.y) * DOMINO_FACT;
 }
 
 //==================================================================================================

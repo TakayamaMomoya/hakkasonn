@@ -15,12 +15,13 @@
 #include "ui.h"
 #include "domino.h"
 #include "sound.h"
+#include "hand.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define DOMINO_SPACE			(50)					//ドミノ同士の間隔
-#define SCROLL_SPEED			(8.0f)					//スクロールスピード
+#define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
+#define SCROLL_SPEED			(22.0f)					//スクロールスピード
 #define MAX_TIME (3)
 #define TIMELIMIT (10)
 #define CLOSSKEY (4)
@@ -65,6 +66,9 @@ HRESULT CGame::Init()
 
 	//ドミノ初期化
 	InitDomino();
+
+	//ハンド初期化
+	InitHand();
 
 	//各数値初期化
 	g_PushState.NowTargetButton = TARGETBUTTON_NONE;
@@ -120,6 +124,7 @@ HRESULT CGame::Init()
 	pPolygon[2].SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 100.0f, 0.0f));
 	pPolygon[2].SetDiagonalLine(SCREEN_WIDTH, 100.0f);
 	pPolygon[2].SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	pPolygon[2].SetUVSize(D3DXVECTOR2(0.5f, 0.5f));
 	pPolygon[2].SetUVMove(D3DXVECTOR2(0.0005f, 0.0f));
 	pPolygon[2].SetPolygon();
 
@@ -129,6 +134,23 @@ HRESULT CGame::Init()
 	pPolygon[3].SetDiagonalLine(SCREEN_WIDTH, SCREEN_HEIGHT);
 	pPolygon[3].SetUVMove(D3DXVECTOR2(0.0005f, 0.0f));
 	pPolygon[3].SetPolygon();
+
+
+	//石橋
+	m_pstone_bridge = new C2DPolygon;
+	if (FAILED(m_pstone_bridge->Init()))
+	{
+		return -1;
+	}
+	nIndex = CTexture::LoadTexture("data\\TEXTURE\\stone_bridge.png");
+	m_pstone_bridge->SetTextIndex(nIndex);
+	m_pstone_bridge->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT - 400.0f, 0.0f));
+	m_pstone_bridge->SetDiagonalLine(SCREEN_WIDTH, 500.0f);
+	m_pstone_bridge->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pstone_bridge->SetUVSize(D3DXVECTOR2(0.3f, 0.5f));
+	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.001f, 0.0f));
+	m_pstone_bridge->SetPolygon();
+
 
 	CManager::GetSound()->Play(CSound::SOUND_BGM_GAME);
 
@@ -145,11 +167,20 @@ void CGame::Uninit()
 	//ドミノ終了
 	UninitDomino();
 
+	//ハンド終了
+	UninitHand();
+
 	if (m_pButton != nullptr)
 	{
 		m_pButton->Uninit();
 		delete m_pButton;
 		m_pButton = nullptr;
+	}
+	if (m_pstone_bridge != nullptr)
+	{
+		m_pstone_bridge->Uninit();
+		delete m_pstone_bridge;
+		m_pstone_bridge = nullptr;
 	}
 	if (m_pBg != nullptr)
 	{
@@ -165,6 +196,7 @@ void CGame::Uninit()
 void CGame::Update()
 {
 	m_pBg->Update();
+	m_pstone_bridge->Update();
 
 	if (g_PushState.nColorCount <= 0)
 	{
@@ -185,7 +217,7 @@ void CGame::Update()
 	if (g_PushState.nPushLimitTime <= 0)
 	{//次のボタンまでの時間が０になったとき
 
-	 //目標ボタンをランダムに設定
+		//目標ボタンをランダムに設定
 		int nRandButton = rand() % (TARGETBUTTON_MAX - 1);
 		int nRandTime = (rand() % MAX_TIME + 2) * 60;
 
@@ -206,6 +238,8 @@ void CGame::Update()
 		{
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
+
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
 	}
 	else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
@@ -216,6 +250,8 @@ void CGame::Update()
 		{
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
+
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
 	}
 	else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
@@ -226,6 +262,8 @@ void CGame::Update()
 		{
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
+
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 		}
 	}
 	else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
@@ -236,6 +274,8 @@ void CGame::Update()
 		{
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
+
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
 		}
 	}
 
@@ -251,23 +291,22 @@ void CGame::Update()
 	ManageScroll();
 
 	if (g_PushState.nTotalLimitTime <= 0 && g_gameState == GAMESTATE_PUSH)
-	{//制限時間がなくなったとき
-		for (int nCntDomino = 0; nCntDomino < g_PushState.nPushCount; nCntDomino++)
-		{//ドミノ召喚
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + nCntDomino * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
-		}
+	{//制限時間がなくなったときドミノを倒しはじめる
+
+		pDomino->state = DOMINOSTATE_DOWN;
+
 		SetGameState(GAMESTATE_DOWN);
 	}
 
 	if (g_gameState == GAMESTATE_END)
-	{
+	{//ゲーム終了なら決定ボタンで遷移
+		
 		if (pInput->Trigger(KEY_DECISION))
 		{
 			CManager * pManager = GetManager();
 			pManager->NextMode(TYPE_RESULT);
 		}
 	}
-
 }
 
 //*****************************************************************************
@@ -302,6 +341,9 @@ void CGame::Draw()
 	
 	//ドミノ描画
 	DrawDomino();
+
+	//石橋
+	m_pstone_bridge->Draw();
 }
 
 //*****************************************************************************

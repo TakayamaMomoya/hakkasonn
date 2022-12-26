@@ -10,8 +10,6 @@
 
 #include "main.h"
 
-static const DWORD FVF_VERTEX_2D = (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1);
-
 //èÛë‘
 typedef enum
 {

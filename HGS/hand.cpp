@@ -10,6 +10,7 @@
 #include "manager.h"
 #include "game.h"
 #include "input.h"
+#include "domino.h"
 
 //マクロ定義
 #define HAND_TEX				""									//テクスチャファイル名
@@ -20,7 +21,6 @@
 LPDIRECT3DTEXTURE9 g_pTextureHand = NULL;							//テクスチャへのポインタ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffHand = NULL;						//頂点バッファへのポインタ
 Hand g_hand;														//構造体
-int g_nHandNum;														//敵の総数
 
 //プロトタイプ宣言
 void UpdateHandPos(Hand *pHand);
@@ -32,12 +32,6 @@ void ManageStateHand(Hand *pHand);
 //==================================================================================================
 void InitHand(void)
 {
-	//変数宣言
-	int nCntHand;
-
-	//変数初期化
-	g_nHandNum = 0;
-
 	//デバイス取得
 	CManager *pManager = GetManager();
 
@@ -140,6 +134,20 @@ void UpdateHandPos(Hand *pHand)
 //==================================================================================================
 void UpdateHandPolygon(Hand *pHand, int nCntHand)
 {
+	//頂点情報のポインタ
+	VERTEX_2D *pVtx;
+
+	//頂点バッファをロックし、頂点情報へのポインタを取得
+	g_pVtxBuffHand->Lock(0, 0, (void**)&pVtx, 0);
+
+	//頂点座標の設定
+	pVtx[0].pos = D3DXVECTOR3(pHand->pos.x - HAND_WIDTH * 0.5f, pHand->pos.y - HAND_HEIGHT * 0.5f, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(pHand->pos.x + HAND_WIDTH * 0.5f, pHand->pos.y - HAND_HEIGHT * 0.5f, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(pHand->pos.x - HAND_WIDTH * 0.5f, pHand->pos.y + HAND_HEIGHT * 0.5f, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(pHand->pos.x + HAND_WIDTH * 0.5f, pHand->pos.y + HAND_HEIGHT * 0.5f, 0.0f);
+
+	//頂点バッファをアンロック
+	g_pVtxBuffHand->Unlock();
 }
 
 //==================================================================================================
@@ -154,7 +162,24 @@ void ManageStateHand(Hand *pHand)
 //==================================================================================================
 void DrawHand(void)
 {
+	//デバイス取得
+	CManager *pManager = GetManager();
 
+	LPDIRECT3DDEVICE9 pDevice = nullptr;
+
+	pDevice = pManager->GetDeviceManager();
+
+	//頂点バッファをデータストリームに設定
+	pDevice->SetStreamSource(0, g_pVtxBuffHand, 0, sizeof(VERTEX_2D));
+
+	//頂点フォーマットの設定
+	pDevice->SetFVF(FVF_VERTEX_2D);
+
+	//テクスチャ設定
+	pDevice->SetTexture(0, g_pTextureHand);
+
+	//ポリゴンの描画
+	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 }
 
 //==================================================================================================
@@ -162,5 +187,5 @@ void DrawHand(void)
 //==================================================================================================
 Hand *GetHand(void)
 {
-	return nullptr;
+	return &g_hand;
 }
