@@ -17,6 +17,7 @@
 #include "sound.h"
 #include "hand.h"
 #include "Score.h"
+#include "sign.h"
 #include "sound.h"
 
 //*****************************************************************************
@@ -25,7 +26,7 @@
 #define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
 #define SCROLL_SPEED			(22.0f)					//スクロールスピード
 #define MAX_TIME (3)
-#define TIMELIMIT (10)
+#define TIMELIMIT (20)
 #define CLOSSKEY (4)
 
 //*****************************************************************************
@@ -74,6 +75,9 @@ HRESULT CGame::Init()
 
 	//スコア初期化
 	InitScore();
+
+	//看板初期化
+	InitSign();
 
 	//各数値初期化
 	g_PushState.NowTargetButton = TARGETBUTTON_NONE;
@@ -177,6 +181,9 @@ void CGame::Uninit()
 
 	//スコア破棄
 	UninitScore();
+
+	//看板破棄
+	UninitSign();
 
 	if (m_pButton != nullptr)
 	{
@@ -323,6 +330,9 @@ void CGame::Update()
 	//ハンド更新
 	UpdateHand();
 
+	//看板更新
+	UpdateSign();
+
 	if (g_PushState.nTotalLimitTime <= 0 && g_gameState == GAMESTATE_PUSH)
 	{//制限時間がなくなったときドミノを倒しはじめる
 
@@ -381,6 +391,9 @@ void CGame::Draw()
 
 	//ハンド描画
 	DrawHand();
+
+	//看板描画
+	DrawSign();
 
 	//石橋
 	m_pstone_bridge->Draw();
