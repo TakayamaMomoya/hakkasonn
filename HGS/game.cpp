@@ -123,6 +123,7 @@ HRESULT CGame::Init()
 	pPolygon[2].SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 100.0f, 0.0f));
 	pPolygon[2].SetDiagonalLine(SCREEN_WIDTH, 100.0f);
 	pPolygon[2].SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	pPolygon[2].SetUVSize(D3DXVECTOR2(0.5f, 0.5f));
 	pPolygon[2].SetUVMove(D3DXVECTOR2(0.0005f, 0.0f));
 	pPolygon[2].SetPolygon();
 
@@ -132,6 +133,23 @@ HRESULT CGame::Init()
 	pPolygon[3].SetDiagonalLine(SCREEN_WIDTH, SCREEN_HEIGHT);
 	pPolygon[3].SetUVMove(D3DXVECTOR2(0.0005f, 0.0f));
 	pPolygon[3].SetPolygon();
+
+
+	//Î‹´
+	m_pstone_bridge = new C2DPolygon;
+	if (FAILED(m_pstone_bridge->Init()))
+	{
+		return -1;
+	}
+	nIndex = CTexture::LoadTexture("data\\TEXTURE\\stone_bridge.png");
+	m_pstone_bridge->SetTextIndex(nIndex);
+	m_pstone_bridge->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT - 400.0f, 0.0f));
+	m_pstone_bridge->SetDiagonalLine(SCREEN_WIDTH, 500.0f);
+	m_pstone_bridge->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pstone_bridge->SetUVSize(D3DXVECTOR2(0.3f, 0.5f));
+	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.001f, 0.0f));
+	m_pstone_bridge->SetPolygon();
+
 
 	return S_OK;
 }
@@ -153,6 +171,12 @@ void CGame::Uninit()
 		delete m_pButton;
 		m_pButton = nullptr;
 	}
+	if (m_pstone_bridge != nullptr)
+	{
+		m_pstone_bridge->Uninit();
+		delete m_pstone_bridge;
+		m_pstone_bridge = nullptr;
+	}
 	if (m_pBg != nullptr)
 	{
 		m_pBg->Uninit();
@@ -167,6 +191,7 @@ void CGame::Uninit()
 void CGame::Update()
 {
 	m_pBg->Update();
+	m_pstone_bridge->Update();
 
 	if (g_PushState.nColorCount <= 0)
 	{
@@ -261,15 +286,16 @@ void CGame::Update()
 	ManageScroll();
 
 	if (g_PushState.nTotalLimitTime <= 0 && g_gameState == GAMESTATE_PUSH)
+	
 	{//§ŒÀŽžŠÔ‚ª‚È‚­‚È‚Á‚½‚Æ‚«ƒhƒ~ƒm‚ð“|‚µ‚Í‚¶‚ß‚é
 
 		pDomino->state = DOMINOSTATE_DOWN;
-
-		SetGameState(GAMESTATE_DOWN);
 	}
+	
 
 	if (g_gameState == GAMESTATE_END)
 	{//ƒQ[ƒ€I—¹‚È‚çŒˆ’èƒ{ƒ^ƒ“‚Å‘JˆÚ
+		
 		if (pInput->Trigger(KEY_DECISION))
 		{
 			CManager * pManager = GetManager();
@@ -311,6 +337,9 @@ void CGame::Draw()
 	
 	//ƒhƒ~ƒm•`‰æ
 	DrawDomino();
+
+	//Î‹´
+	m_pstone_bridge->Draw();
 }
 
 //*****************************************************************************
