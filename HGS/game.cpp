@@ -14,6 +14,7 @@
 #include "texture.h"
 #include "ui.h"
 #include "domino.h"
+#include "hand.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -64,6 +65,9 @@ HRESULT CGame::Init()
 
 	//ドミノ初期化
 	InitDomino();
+
+	//ハンド初期化
+	InitHand();
 
 	//各数値初期化
 	g_PushState.NowTargetButton = TARGETBUTTON_NONE;
@@ -140,6 +144,9 @@ void CGame::Uninit()
 	//ドミノ終了
 	UninitDomino();
 
+	//ハンド終了
+	UninitHand();
+
 	if (m_pButton != nullptr)
 	{
 		m_pButton->Uninit();
@@ -180,7 +187,7 @@ void CGame::Update()
 	if (g_PushState.nPushLimitTime <= 0)
 	{//次のボタンまでの時間が０になったとき
 
-	 //目標ボタンをランダムに設定
+		//目標ボタンをランダムに設定
 		int nRandButton = rand() % (TARGETBUTTON_MAX - 1);
 		int nRandTime = (rand() % MAX_TIME + 2) * 60;
 
@@ -201,6 +208,8 @@ void CGame::Update()
 		{
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
+
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
 		}
 	}
 	else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
@@ -211,6 +220,8 @@ void CGame::Update()
 		{
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
+
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
 		}
 	}
 	else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
@@ -221,6 +232,8 @@ void CGame::Update()
 		{
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
+
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
 		}
 	}
 	else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
@@ -231,6 +244,8 @@ void CGame::Update()
 		{
 			g_PushState.nPushCount++;
 			g_PushState.nColorCount = 3;
+
+			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
 		}
 	}
 
@@ -246,16 +261,15 @@ void CGame::Update()
 	ManageScroll();
 
 	if (g_PushState.nTotalLimitTime <= 0 && g_gameState == GAMESTATE_PUSH)
-	{//制限時間がなくなったとき
-		for (int nCntDomino = 0; nCntDomino < g_PushState.nPushCount; nCntDomino++)
-		{//ドミノ召喚
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + nCntDomino * DOMINO_SPACE, SCREEN_HEIGHT * 0.5f, 0.0f));
-		}
+	{//制限時間がなくなったときドミノを倒しはじめる
+
+		pDomino->state = DOMINOSTATE_DOWN;
+
 		SetGameState(GAMESTATE_DOWN);
 	}
 
 	if (g_gameState == GAMESTATE_END)
-	{
+	{//ゲーム終了なら決定ボタンで遷移
 		if (pInput->Trigger(KEY_DECISION))
 		{
 			CManager * pManager = GetManager();
