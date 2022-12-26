@@ -344,6 +344,11 @@ void CGame::Update()
 		pHand->state = HANDSTATE_PUSH;
 	}
 
+	if (g_gameState == GAMESTATE_DOWN && GetDominoNum() == 0)
+	{//ドミノを一個も出さずに倒した場合
+		SetGameState(GAMESTATE_END);
+	}
+
 	if (g_gameState == GAMESTATE_END)
 	{//ゲーム終了なら決定ボタンで遷移
 		SetScore(g_PushState.nPushCount);
