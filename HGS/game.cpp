@@ -24,11 +24,12 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
-#define SCROLL_SPEED			(11.0f)					//スクロールスピード
-#define MAX_TIME (3)
-#define TIMELIMIT (20)
-#define CLOSSKEY (4)
+#define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)			//ドミノ同士の間隔
+#define SCROLL_SPEED			(11.0f)							//スクロールスピード
+#define MAX_TIME				(3)
+#define TIMELIMIT				(2)
+#define CLOSSKEY				(4)
+#define FADE_TIMER				(300)							//フェードするまでの時間
 
 //*****************************************************************************
 void ManageScroll(void);
@@ -44,6 +45,7 @@ static const D3DXVECTOR3 POS_RIGHT = D3DXVECTOR3(POS.x + 70.0f, POS.y, 0.0f);
 static const D3DXVECTOR3 POS_LEFT = D3DXVECTOR3(POS.x - 70.0f, POS.y, 0.0f);
 D3DXVECTOR3 g_posWorld;
 GAMESTATE g_gameState;
+int g_nCntFadeGame;
 
 //*****************************************************************************
 // コンストラクタ
@@ -67,6 +69,7 @@ HRESULT CGame::Init()
 	//変数初期化
 	g_posWorld = {0.0f,0.0f,0.0f};
 	g_gameState = GAMESTATE_PUSH;
+	g_nCntFadeGame = 0;
 
 	//ドミノ初期化
 	InitDomino();
@@ -418,12 +421,18 @@ void CGame::Update()
 
 	if (g_gameState == GAMESTATE_END)
 	{//ゲーム終了なら決定ボタンで遷移
+
+		//スコア設定
 		SetScore(g_PushState.nPushCount);
-		if (pInput->Trigger(KEY_DECISION))
-		{
+
+		if (pInput->Trigger(KEY_DECISION) || FADE_TIMER < g_nCntFadeGame)
+		{//画面遷移
 			CManager * pManager = GetManager();
 			pManager->NextMode(TYPE_RESULT);
 		}
+
+		//カウンタ加算
+		g_nCntFadeGame++;
 	}
 }
 

@@ -16,6 +16,18 @@
 #include "manager.h"
 #include "sound.h"
 #include "ranking.h"
+#include "domino.h"
+
+//*****************************************************************************
+// マクロ定義
+//*****************************************************************************
+#define FADE_TIMER					(300)			//フェードまでの時間
+
+
+//*****************************************************************************
+// グローバル変数
+//*****************************************************************************
+int g_nCntFadeResult;								//フェードまでのカウンター
 
 //*****************************************************************************
 // コンストラクタ
@@ -36,7 +48,27 @@ CResult::~CResult()
 //*****************************************************************************
 HRESULT CResult::Init()
 {
+	//変数初期化
+	g_nCntFadeResult = 0;
+
+	//ドミノ初期化
+	InitDomino();
+
+	//ドミノ召喚
+	for (int nCntDomino = 0; nCntDomino < MAX_DOMINO; nCntDomino++)
+	{
+		SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + nCntDomino * DOMINO_WIDTH * 2.5f, SCREEN_HEIGHT * 0.82f, 0.0f));
+	}
+
+	//情報取得
+	Domino *pDomino = GetDomino();
+
+	//最初のドミノを倒す
+	pDomino->state = DOMINOSTATE_DOWN;
+
+	//ランキング初期化
 	InitRanking();
+
 	//nullptr
 	m_pUi = nullptr;
 
@@ -70,7 +102,13 @@ HRESULT CResult::Init()
 void CResult::Uninit()
 {
 	CManager::GetSound()->Stop(CSound::SOUND_BGM_RESULT);
+
+	//ランキング終了
 	UninitRanking();
+
+	//ドミノ終了
+	UninitDomino();
+
 	//UiRelease
 	if (m_pUi != nullptr)
 	{
@@ -86,16 +124,29 @@ void CResult::Uninit()
 //*****************************************************************************
 void CResult::Update()
 {
+	//カウンター加算
+	g_nCntFadeResult++;
+
 	//UiUpdate
 	m_pUi->Update();
 
 	//GetInput
 	CInput *pInput = CInput::GetKey();
 
+	//ランキング更新
 	UpdateRanking();
+
+	//ドミノ更新
+	UpdateTitleDomino();
 
 	//EndResult
 	if (pInput->Trigger(KEY_DECISION))
+	{
+		CManager * pManager = GetManager();
+		pManager->NextMode(TYPE_TITLE);
+	}
+
+	if (FADE_TIMER < g_nCntFadeResult)
 	{
 		CManager * pManager = GetManager();
 		pManager->NextMode(TYPE_TITLE);
@@ -109,5 +160,10 @@ void CResult::Draw()
 {
 	//UiDraw
 	m_pUi->Draw();
+
+	//ドミノ描画
+	DrawDomino();
+
+	//ランキング描画
 	DrawRanking();
 }
