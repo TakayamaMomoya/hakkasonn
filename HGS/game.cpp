@@ -381,6 +381,11 @@ void CGame::Update()
 		pHand->state = HANDSTATE_PUSH;
 	}
 
+	if (g_gameState == GAMESTATE_DOWN && GetDominoNum() == 0)
+	{//ƒhƒ~ƒm‚ðˆêŒÂ‚ào‚³‚¸‚É“|‚µ‚½ê‡
+		SetGameState(GAMESTATE_END);
+	}
+
 	if (m_pFlowObject->GetPos().x < -300.0f)
 	{
 		m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
