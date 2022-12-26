@@ -26,7 +26,7 @@
 #define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
 #define SCROLL_SPEED			(22.0f)					//スクロールスピード
 #define MAX_TIME (3)
-#define TIMELIMIT (20)
+#define TIMELIMIT (2)
 #define CLOSSKEY (4)
 
 //*****************************************************************************
