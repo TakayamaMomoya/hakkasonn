@@ -88,7 +88,7 @@ private:
 	C2DPolygon* m_pFlowObject;
 	int m_nText[TEXT_MAX];
 	CNumber_Manager* m_pNumber_Manager;
-
+	
 
 
 };

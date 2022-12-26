@@ -16,6 +16,7 @@
 // 前方宣言
 //*****************************************************************************
 class CUI;
+class C2DPolygon;
 
 //*****************************************************************************
 // クラス定義
@@ -23,7 +24,7 @@ class CUI;
 class CTitle : public CObject
 {
 private:
-
+	static const int TEXT_MAX = 17;
 public:
 	CTitle();
 	~CTitle() override;
@@ -34,7 +35,14 @@ public:
 	void Draw() override;
 
 private:
-	CUI *m_pUi;
+	C2DPolygon* m_pSea;
+	CUI* m_pBg;
+	C2DPolygon* m_pstone_bridge;
+	C2DPolygon* m_pFlowObject;
+	int m_nText[TEXT_MAX];
+	C2DPolygon* m_pTitle;
+	C2DPolygon *m_pPressKeyPolygon;
+	float m_fPressKeyPolygonColorA;
 };
 
 #endif
