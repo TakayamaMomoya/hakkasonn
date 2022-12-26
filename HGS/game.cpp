@@ -16,6 +16,7 @@
 #include "domino.h"
 #include "sound.h"
 #include "hand.h"
+#include "Score.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -69,6 +70,9 @@ HRESULT CGame::Init()
 
 	//ハンド初期化
 	InitHand();
+
+	//スコア初期化
+	InitScore();
 
 	//各数値初期化
 	g_PushState.NowTargetButton = TARGETBUTTON_NONE;
@@ -169,6 +173,9 @@ void CGame::Uninit()
 
 	//ハンド終了
 	UninitHand();
+
+	//スコア破棄
+	UninitScore();
 
 	if (m_pButton != nullptr)
 	{
@@ -305,7 +312,7 @@ void CGame::Update()
 
 	if (g_gameState == GAMESTATE_END)
 	{//ゲーム終了なら決定ボタンで遷移
-
+		SetScore(g_PushState.nPushCount);
 		if (pInput->Trigger(KEY_DECISION))
 		{
 			CManager * pManager = GetManager();
@@ -350,6 +357,11 @@ void CGame::Draw()
 
 	//石橋
 	m_pstone_bridge->Draw();
+	if (g_gameState == GAMESTATE_END)
+	{
+		//スコア描画
+		DrawScore();
+	}
 }
 
 //*****************************************************************************
