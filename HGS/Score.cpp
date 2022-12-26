@@ -33,7 +33,7 @@ void InitScore(void)
 	g_nScorePoint = 0;
 	//テクスチャ読み込み
 	D3DXCreateTextureFromFile(pDevice,
-		"Data\\TEXTURE\\number001.png",
+		"Data\\TEXTURE\\number_pop.png",
 		&g_pTextureScore);
 
 	//スコアの情報の初期化
@@ -56,10 +56,10 @@ void InitScore(void)
 		for (nCntScore = 0; nCntScore < NUM_PLACE; nCntScore++)
 		{
 			//頂点座標の設定
-			pVtx[0].pos = D3DXVECTOR3(((g_posPcore.x + 120 * nCntScore) - 100), (g_posPcore.y - 200), 0.0f);
-			pVtx[1].pos = D3DXVECTOR3(((g_posPcore.x + 120 * nCntScore) + 100), (g_posPcore.y - 200), 0.0f);
-			pVtx[2].pos = D3DXVECTOR3(((g_posPcore.x + 120 * nCntScore) - 100), (g_posPcore.y + 200), 0.0f);
-			pVtx[3].pos = D3DXVECTOR3(((g_posPcore.x + 120 * nCntScore) + 100), (g_posPcore.y + 200), 0.0f);
+			pVtx[0].pos = D3DXVECTOR3(((g_posPcore.x + 120 * nCntScore) - 80), (g_posPcore.y - 160), 0.0f);
+			pVtx[1].pos = D3DXVECTOR3(((g_posPcore.x + 120 * nCntScore) + 80), (g_posPcore.y - 160), 0.0f);
+			pVtx[2].pos = D3DXVECTOR3(((g_posPcore.x + 120 * nCntScore) - 80), (g_posPcore.y + 160), 0.0f);
+			pVtx[3].pos = D3DXVECTOR3(((g_posPcore.x + 120 * nCntScore) + 80), (g_posPcore.y + 160), 0.0f);
 
 			pVtx[0].rhw = 1.0f;
 			pVtx[1].rhw = 1.0f;
