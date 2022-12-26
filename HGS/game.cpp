@@ -214,12 +214,13 @@ void CGame::Update()
 	g_PushState.nPushLimitTime--;
 	g_PushState.nTotalLimitTime--;
 	g_PushState.nColorCount--;
+
 	if (g_PushState.nPushLimitTime <= 0)
 	{//次のボタンまでの時間が０になったとき
 
 		//目標ボタンをランダムに設定
 		int nRandButton = rand() % (TARGETBUTTON_MAX - 1);
-		int nRandTime = (rand() % MAX_TIME + 2) * 60;
+		int nRandTime = (rand() % MAX_TIME + 1) * 60;
 
 		g_PushState.NowTargetButton = (TARGETBUTTON)(nRandButton + 1);
 		g_PushState.nPushLimitTime = nRandTime;
@@ -228,11 +229,8 @@ void CGame::Update()
 	//GetInput
 	CInput *pInput = CInput::GetKey();
 
-	//===============================================
-	//目標ボタンが押されているかの判定
-if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
-{
-	if (g_PushState.NowTargetButton == TARGETBUTTON_UP)
+
+	if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
 	{
 		//===============================================
 		//目標ボタンが押されているかの判定
@@ -245,8 +243,9 @@ if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
-}		}
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+			}
+		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
 		{
 			m_pButton->SetPos(POS_DOWN);
@@ -256,7 +255,8 @@ if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
 		{
@@ -267,7 +267,8 @@ if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-			SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
 		{
@@ -282,6 +283,7 @@ if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
 			}
 		}
 	}
+
 	m_pButton->Update();
 
 	//ドミノ情報取得
@@ -303,7 +305,7 @@ if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
 
 	if (g_gameState == GAMESTATE_END)
 	{//ゲーム終了なら決定ボタンで遷移
-		
+
 		if (pInput->Trigger(KEY_DECISION))
 		{
 			CManager * pManager = GetManager();
@@ -311,6 +313,7 @@ if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
 		}
 	}
 }
+
 
 //*****************************************************************************
 // スクロール管理
