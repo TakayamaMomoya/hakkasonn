@@ -17,6 +17,8 @@
 #include "sound.h"
 #include "hand.h"
 #include "Score.h"
+#include "sign.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -24,7 +26,7 @@
 #define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
 #define SCROLL_SPEED			(22.0f)					//スクロールスピード
 #define MAX_TIME (3)
-#define TIMELIMIT (10)
+#define TIMELIMIT (20)
 #define CLOSSKEY (4)
 
 //*****************************************************************************
@@ -73,6 +75,9 @@ HRESULT CGame::Init()
 
 	//スコア初期化
 	InitScore();
+
+	//看板初期化
+	InitSign();
 
 	//各数値初期化
 	g_PushState.NowTargetButton = TARGETBUTTON_NONE;
@@ -158,6 +163,36 @@ HRESULT CGame::Init()
 
 	CManager::GetSound()->Play(CSound::SOUND_BGM_GAME);
 
+	m_pFlowObject = new C2DPolygon;
+	if (FAILED(m_pFlowObject->Init()))
+	{
+		return -1;
+	}
+	m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
+	m_pFlowObject->SetDiagonalLine(200.0f, 200.0f);
+	m_pFlowObject->SetPolygon();
+	m_pFlowObject->SetMove(D3DXVECTOR3(-3.0f,0.0f,0.0f));
+
+	m_nText[0] = CTexture::LoadTexture("data\\TEXTURE\\漂流物01.png");
+	m_nText[1] = CTexture::LoadTexture("data\\TEXTURE\\漂流物02.png");
+	m_nText[2] = CTexture::LoadTexture("data\\TEXTURE\\漂流物03.png");
+	m_nText[3] = CTexture::LoadTexture("data\\TEXTURE\\漂流物04.png");
+	m_nText[4] = CTexture::LoadTexture("data\\TEXTURE\\漂流物05.png");
+	m_nText[5] = CTexture::LoadTexture("data\\TEXTURE\\漂流物06.png");
+	m_nText[6] = CTexture::LoadTexture("data\\TEXTURE\\漂流物07.png");
+	m_nText[7] = CTexture::LoadTexture("data\\TEXTURE\\漂流物08.png");
+	m_nText[8] = CTexture::LoadTexture("data\\TEXTURE\\漂流物09.png");
+	m_nText[9] = CTexture::LoadTexture("data\\TEXTURE\\漂流物010.png");
+	m_nText[10] = CTexture::LoadTexture("data\\TEXTURE\\漂流物11.png");
+	m_nText[11] = CTexture::LoadTexture("data\\TEXTURE\\漂流物12.png");
+	m_nText[12] = CTexture::LoadTexture("data\\TEXTURE\\漂流物13.png");
+	m_nText[13] = CTexture::LoadTexture("data\\TEXTURE\\漂流物14.png");
+	m_nText[14] = CTexture::LoadTexture("data\\TEXTURE\\漂流物15.png");
+	m_nText[15] = CTexture::LoadTexture("data\\TEXTURE\\漂流物16.png");
+	m_nText[16] = CTexture::LoadTexture("data\\TEXTURE\\漂流物17.png");
+
+
+	m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
 	return S_OK;
 }
 
@@ -177,6 +212,9 @@ void CGame::Uninit()
 	//スコア破棄
 	UninitScore();
 
+	//看板破棄
+	UninitSign();
+
 	if (m_pButton != nullptr)
 	{
 		m_pButton->Uninit();
@@ -195,6 +233,12 @@ void CGame::Uninit()
 		delete m_pBg;
 		m_pBg = nullptr;
 	}
+	if (m_pFlowObject != nullptr)
+	{
+		m_pFlowObject->Uninit();
+		delete m_pFlowObject;
+		m_pFlowObject = nullptr;
+	}
 }
 
 //*****************************************************************************
@@ -202,6 +246,7 @@ void CGame::Uninit()
 //*****************************************************************************
 void CGame::Update()
 {
+	m_pFlowObject->Update();
 	m_pBg->Update();
 	if (g_gameState == GAMESTATE_DOWN)
 	{
@@ -259,6 +304,9 @@ void CGame::Update()
 				g_PushState.nColorCount = 3;
 
 				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+
+				//サウンド(SE)の再生
+				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
@@ -271,6 +319,9 @@ void CGame::Update()
 				g_PushState.nColorCount = 3;
 
 				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+
+				//サウンド(SE)の再生
+				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
@@ -283,6 +334,9 @@ void CGame::Update()
 				g_PushState.nColorCount = 3;
 
 				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+
+				//サウンド(SE)の再生
+				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
@@ -295,6 +349,9 @@ void CGame::Update()
 				g_PushState.nColorCount = 3;
 
 				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
+
+				//サウンド(SE)の再生
+				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
 			}
 
 		}
@@ -314,6 +371,9 @@ void CGame::Update()
 	//ハンド更新
 	UpdateHand();
 
+	//看板更新
+	UpdateSign();
+
 	if (g_PushState.nTotalLimitTime <= 0 && g_gameState == GAMESTATE_PUSH)
 	{//制限時間がなくなったときドミノを倒しはじめる
 
@@ -324,6 +384,18 @@ void CGame::Update()
 
 		pHand->state = HANDSTATE_PUSH;
 	}
+
+	if (g_gameState == GAMESTATE_DOWN && GetDominoNum() == 0)
+	{//ドミノを一個も出さずに倒した場合
+		SetGameState(GAMESTATE_END);
+	}
+
+	if (m_pFlowObject->GetPos().x < -300.0f)
+	{
+		m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
+		m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
+	}
+
 
 	if (g_gameState == GAMESTATE_END)
 	{//ゲーム終了なら決定ボタンで遷移
@@ -362,6 +434,9 @@ void CGame::Draw()
 	//背景描画
 	m_pBg->Draw();
 
+	//漂流物
+	m_pFlowObject->Draw();
+
 	if (g_gameState == GAMESTATE_PUSH)
 	{//ボタン描画
 		m_pButton->Draw();
@@ -372,6 +447,9 @@ void CGame::Draw()
 
 	//ハンド描画
 	DrawHand();
+
+	//看板描画
+	DrawSign();
 
 	//石橋
 	m_pstone_bridge->Draw();

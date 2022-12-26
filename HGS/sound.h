@@ -37,6 +37,7 @@ public:
 		SOUND_BGM_TITLE = 0,								//タイトル
 		SOUND_BGM_GAME,										//ゲーム内で使用する
 		SOUND_BGM_RESULT,									//リザルトで使用する
+		SOUND_SE_MASH_BOTTON,								//ボタン連打音
 		SOUND_MAX,
 	};
 
@@ -47,8 +48,6 @@ public:
 	HRESULT Init();											// 初期化
 	void Uninit();											// 終了
 	HRESULT Play(SOUND_TYPE type);							// 再生
-	void SetVolume(SOUND_TYPE type, float fVolume);			// 音量の設定、初期化のときに使ってほしいです。最悪なくてもいい。ちなみに、SEにはいらないよ
-	void SetRate(SOUND_TYPE type, float rate);				// ピッチ操作、初期化以下略。最悪なくてもいい。
 	void Stop(SOUND_TYPE type);								// 一部停止
 	void Stop();											// 全停止
 
@@ -71,8 +70,6 @@ private:
 	BYTE *m_apDataAudio[SOUND_MAX];							// オーディオデータ
 	DWORD m_aSizeAudio[SOUND_MAX];							// オーディオデータサイズ
 	int m_nCountFade;										// フェード用カウンター
-	float m_fVol;											// サウンドの音量を変化させる変数
-	float m_fPitch;											// サウンドの音程を変化させる変数
 };
 
 #endif // !_SOUND_H_

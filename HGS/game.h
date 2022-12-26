@@ -67,7 +67,7 @@ typedef enum
 class CGame : public CObject
 {
 private:
-	
+	static const int TEXT_MAX = 17;
 public:
 	CGame();
 	~CGame() override;
@@ -82,8 +82,8 @@ private:
 	CUI* m_pBg;
 	C2DPolygon* m_pButton;
 	C2DPolygon* m_pstone_bridge;
-
-
+	C2DPolygon* m_pFlowObject;
+	int m_nText[TEXT_MAX];
 
 
 
