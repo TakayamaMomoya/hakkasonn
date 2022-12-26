@@ -148,7 +148,7 @@ HRESULT CGame::Init()
 	m_pstone_bridge->SetDiagonalLine(SCREEN_WIDTH, 500.0f);
 	m_pstone_bridge->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	m_pstone_bridge->SetUVSize(D3DXVECTOR2(0.3f, 0.5f));
-	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.001f, 0.0f));
+	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.008f, 0.0f));
 	m_pstone_bridge->SetPolygon();
 
 
@@ -195,8 +195,12 @@ void CGame::Uninit()
 //*****************************************************************************
 void CGame::Update()
 {
-	m_pBg->Update();
-	m_pstone_bridge->Update();
+	if (g_gameState == GAMESTATE_DOWN)
+	{
+		m_pstone_bridge->Update();
+		m_pBg->Update();
+	}
+	
 
 	if (g_PushState.nColorCount <= 0)
 	{
