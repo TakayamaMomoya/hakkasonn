@@ -25,7 +25,7 @@
 // マクロ定義
 //*****************************************************************************
 #define DOMINO_SPACE			(DOMINO_WIDTH * 2.2f)					//ドミノ同士の間隔
-#define SCROLL_SPEED			(22.0f)					//スクロールスピード
+#define SCROLL_SPEED			(11.0f)					//スクロールスピード
 #define MAX_TIME (3)
 #define TIMELIMIT (2)
 #define CLOSSKEY (4)
@@ -223,6 +223,8 @@ void CGame::Uninit()
 
 	//看板破棄
 	UninitSign();
+
+	g_posWorld = { 0.0f,0.0f,0.0f };
 
 	if (m_pButton != nullptr)
 	{
