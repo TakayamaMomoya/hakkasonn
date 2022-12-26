@@ -38,6 +38,10 @@ public:
 		SOUND_BGM_GAME,										//ゲーム内で使用する
 		SOUND_BGM_RESULT,									//リザルトで使用する
 		SOUND_SE_MASH_BOTTON,								//ボタン連打音
+		SOUND_SE_DORAMROOL,
+		SOUND_SE_COUNTDOWN,
+		SOUND_SE_START,
+		SOUND_SE_SHINBAL,
 		SOUND_MAX,
 	};
 

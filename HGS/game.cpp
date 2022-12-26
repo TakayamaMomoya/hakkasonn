@@ -423,10 +423,15 @@ void CGame::Update()
 			pDomino->state = DOMINOSTATE_DOWN;
 
 			pHand->state = HANDSTATE_PUSH;
+
 		}
 
 		if (g_gameState == GAMESTATE_DOWN && GetDominoNum() == 0)
 		{//ドミノを一個も出さずに倒した場合
+
+		 //サウンド(SE)の再生
+			CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
+
 			SetGameState(GAMESTATE_END);
 		}
 
@@ -435,7 +440,6 @@ void CGame::Update()
 			m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
 			m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
 		}
-
 
 
 		if (g_gameState == GAMESTATE_END)

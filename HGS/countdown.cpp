@@ -3,6 +3,7 @@
 #include "renderer.h"
 #include "domino.h"
 #include "tutorial.h"
+#include "sound.h"
 
 //プロトタイプ宣言
 #define NUM_PLACECOUNT (1)
@@ -123,6 +124,9 @@ void UpdateCountDown(void)
 
 		if (g_nCountDown <= 0)
 		{
+			//サウンド(SE)の再生
+			CManager::GetSound()->Play(CSound::SOUND_SE_START);
+
 			g_bUse = false;
 		}
 
