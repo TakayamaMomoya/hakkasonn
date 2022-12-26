@@ -19,23 +19,11 @@ const CSound::PARAM CSound::param[] =
 	{ "Data/BGM/cooking.wav",-1 },							//タイトル
 	{ "Data/BGM/noisy_daily_life.wav",-1 },					//ゲーム
 	{ "Data/BGM/Relax_Marimba_M249.wav",-1 },				//リザルト
+	{ "Data/SE/snare03.wav",0 },							//連打音
 };
 
 //サウンドパラメーター情報が足りなかったときにエラーを出す処理（デバック用）
 static_assert(sizeof(CSound::param) / sizeof(CSound::param[0]) == CSound::SOUND_MAX, "hahahahaha! SoundCheck Error!! !!rorrE kcehCdnuoS !ahahahahah");
-
-//--------------------------------------
-//マクロ定義
-//--------------------------------------
-#define SOUND_VOLUME		(1.0f)						//音量の初期値
-
-//--------------------------------------
-//定数定義
-//--------------------------------------
-const float MAX_CONSTANT = 11.0f;						//定数の最大値
-const float MIN_CONSTANT_VOLUME = 0.0f;					//音量定数の最小値
-const float MIN_CONSTANT_PITCH = -11.0f;				//音程定数の最小値
-const float SOUND_PITCH = 1.0f;							//音程の初期値
 
 //--------------------------------------
 //コンストラクタ
@@ -47,8 +35,6 @@ CSound::CSound()
 	m_apSourceVoice[SOUND_MAX] = {};					// ソースボイス
 	m_apDataAudio[SOUND_MAX] = {};						// オーディオデータ
 	m_aSizeAudio[SOUND_MAX] = {};						// オーディオデータサイズ
-	m_fVol = 0.0f;										// 音量のクリア
-	m_fPitch = 0.0f;									// 音程のクリア
 }
 
 //--------------------------------------
@@ -64,9 +50,6 @@ CSound::~CSound()
 HRESULT CSound::Init()
 {
 	HRESULT hr;
-
-	m_fVol = SOUND_VOLUME;			//音量の初期化
-	m_fPitch = SOUND_PITCH;			//音程の初期化
 
 	// COMライブラリの初期化
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
@@ -298,22 +281,6 @@ HRESULT CSound::Play(SOUND_TYPE type)
 
 		return S_OK;
 	}
-}
-
-//--------------------------------------
-//音量設定
-//--------------------------------------
-void CSound::SetVolume(SOUND_TYPE type, float fVolume)
-{//1.使用するサウンドタイプを指定 2.設定したい値を代入
-	m_apSourceVoice[type]->SetVolume(fVolume);
-}
-
-//--------------------------------------
-//ピッチ操作
-//--------------------------------------
-void CSound::SetRate(SOUND_TYPE type, float rate)
-{//1.使用するサウンドタイプを指定 2.設定したい値を代入
-	m_apSourceVoice[type]->SetFrequencyRatio(rate);
 }
 
 //--------------------------------------

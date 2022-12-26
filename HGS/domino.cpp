@@ -11,12 +11,13 @@
 #include "manager.h"
 #include "game.h"
 #include "input.h"
+#include "sign.h"
 
 //マクロ定義
 #define DOMINO_TEX				""										//テクスチャファイル名
 #define ROLL_SPEED				(-0.16f)								//回転スピード
 #define ROLL_LIMIT				(D3DX_PI * 0.35f)						//倒れきる角度
-#define POS_LIMIT_Y				(SCREEN_HEIGHT * 0.66f)					//ドミノの到達地点
+#define POS_LIMIT_Y				(SCREEN_HEIGHT * 0.82f)					//ドミノの到達地点
 #define DOMINO_FACT				(0.1f)									//ドミノの係数
 #define NUM_COL					(4)										//色の種類
 
@@ -334,6 +335,22 @@ void SetDomino(D3DXVECTOR3 pos)
 			pVtx[1].col = COL_DOMINO[nCol];
 			pVtx[2].col = COL_DOMINO[nCol];
 			pVtx[3].col = COL_DOMINO[nCol];
+
+			if (nCntDomino != 0)
+			{
+				if (nCntDomino % 100 == 0)
+				{
+					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f), SIGNTYPE_100);
+				}
+				else if (nCntDomino % 50 == 0)
+				{
+					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f), SIGNTYPE_50);
+				}
+				else if (nCntDomino % 10 == 0)
+				{//１０個ごと看板表示
+					SetSign(D3DXVECTOR3(pos.x + SIGN_WIDTH * 0.5f, POS_LIMIT_Y, 0.0f),SIGNTYPE_10);
+				}
+			}
 
 			g_nDominoNum++;
 
