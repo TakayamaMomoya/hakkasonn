@@ -16,6 +16,7 @@
 #include "domino.h"
 #include "sound.h"
 #include "hand.h"
+#include "Score.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -69,6 +70,9 @@ HRESULT CGame::Init()
 
 	//ハンド初期化
 	InitHand();
+
+	//スコア初期化
+	InitScore();
 
 	//各数値初期化
 	g_PushState.NowTargetButton = TARGETBUTTON_NONE;
@@ -170,6 +174,9 @@ void CGame::Uninit()
 	//ハンド終了
 	UninitHand();
 
+	//スコア破棄
+	UninitScore();
+
 	if (m_pButton != nullptr)
 	{
 		m_pButton->Uninit();
@@ -200,7 +207,7 @@ void CGame::Update()
 	{
 		m_pstone_bridge->Update();
 	}
-	
+
 
 	if (g_PushState.nColorCount <= 0)
 	{
@@ -247,7 +254,7 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
@@ -259,7 +266,7 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
@@ -271,7 +278,7 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 			}
 		}
 		else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
@@ -283,11 +290,12 @@ void CGame::Update()
 				g_PushState.nPushCount++;
 				g_PushState.nColorCount = 3;
 
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.5f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
+				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
 			}
-		}
-	}
 
+		}
+
+	}
 	m_pButton->Update();
 
 	//ドミノ情報取得
@@ -299,17 +307,23 @@ void CGame::Update()
 	//スクロールの管理
 	ManageScroll();
 
+	//ハンド更新
+	UpdateHand();
+
 	if (g_PushState.nTotalLimitTime <= 0 && g_gameState == GAMESTATE_PUSH)
 	{//制限時間がなくなったときドミノを倒しはじめる
 
+		//情報取得
+		Hand *pHand = GetHand();
+
 		pDomino->state = DOMINOSTATE_DOWN;
 
-		SetGameState(GAMESTATE_DOWN);
+		pHand->state = HANDSTATE_PUSH;
 	}
 
 	if (g_gameState == GAMESTATE_END)
 	{//ゲーム終了なら決定ボタンで遷移
-
+		SetScore(g_PushState.nPushCount);
 		if (pInput->Trigger(KEY_DECISION))
 		{
 			CManager * pManager = GetManager();
@@ -352,8 +366,16 @@ void CGame::Draw()
 	//ドミノ描画
 	DrawDomino();
 
+	//ハンド描画
+	DrawHand();
+
 	//石橋
 	m_pstone_bridge->Draw();
+	if (g_gameState == GAMESTATE_END)
+	{
+		//スコア描画
+		DrawScore();
+	}
 }
 
 //*****************************************************************************

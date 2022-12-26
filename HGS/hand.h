@@ -14,6 +14,7 @@
 typedef enum
 {
 	HANDSTATE_NORMAL = 0,		//通常状態
+	HANDSTATE_PUSH,				//押す状態
 	HANDSTATE_MAX
 }HANDSTATE;
 
@@ -24,6 +25,7 @@ typedef struct
 	D3DXVECTOR3 posWorld;		//原点からの相対位置
 	D3DXCOLOR col;				//色
 	HANDSTATE state;			//状態
+	int nMovekey;				//移動キー
 }Hand;
 
 //プロトタイプ宣言
@@ -31,7 +33,6 @@ void InitHand(void);
 void UninitHand(void);
 void UpdateHand(void);
 void DrawHand(void);
-void SetHand(D3DXVECTOR3 pos);
 Hand *GetHand(void);
 
 #endif
