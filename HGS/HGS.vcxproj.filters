@@ -1,20 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="2dpolygon.cpp" />
+    <ClCompile Include="DirectInput.cpp" />
+    <ClCompile Include="domino.cpp" />
+    <ClCompile Include="fade.cpp" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="hand.cpp" />
+    <ClCompile Include="input.cpp" />
+    <ClCompile Include="inputjoypad.cpp" />
+    <ClCompile Include="inputkeyboard.cpp" />
+    <ClCompile Include="inputmouse.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="manager.cpp" />
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="ranking.cpp" />
+    <ClCompile Include="read.cpp" />
+    <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="result.cpp" />
+    <ClCompile Include="Score.cpp" />
+    <ClCompile Include="sign.cpp" />
+    <ClCompile Include="sound.cpp" />
+    <ClCompile Include="texture.cpp" />
+    <ClCompile Include="title.cpp" />
+    <ClCompile Include="ui.cpp" />
+    <ClCompile Include="tutorial.cpp" />
+    <ClCompile Include="countdown.cpp" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+    <ClInclude Include="2dpolygon.h" />
+    <ClInclude Include="DirectInput.h" />
+    <ClInclude Include="domino.h" />
+    <ClInclude Include="fade.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="hand.h" />
+    <ClInclude Include="input.h" />
+    <ClInclude Include="inputjoypad.h" />
+    <ClInclude Include="inputkeyboard.h" />
+    <ClInclude Include="inputkeydata.h" />
+    <ClInclude Include="inputmouse.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="manager.h" />
+    <ClInclude Include="object.h" />
+    <ClInclude Include="ranking.h" />
+    <ClInclude Include="read.h" />
+    <ClInclude Include="renderer.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="result.h" />
+    <ClInclude Include="Score.h" />
+    <ClInclude Include="sign.h" />
+    <ClInclude Include="sound.h" />
+    <ClInclude Include="texture.h" />
+    <ClInclude Include="title.h" />
+    <ClInclude Include="ui.h" />
+    <ClInclude Include="tutorial.h" />
+    <ClInclude Include="countdown.h" />
+=======
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -175,5 +217,6 @@
     <ClInclude Include="number.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+>>>>>>> ced461c3ffe18f26048aa99195ab1b3abc7ef5e6
   </ItemGroup>
 </Project>

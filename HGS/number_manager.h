@@ -32,7 +32,7 @@ public:
 	void Update();
 	void Draw();
 
-	void SetNumber(D3DXVECTOR3 pos, int nNum);
+	void SetNumber(D3DXVECTOR3 pos, float fSize, int nNum);
 
 private:
 	std::list<CNumber*> m_NumberList;

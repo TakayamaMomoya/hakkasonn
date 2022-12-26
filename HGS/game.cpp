@@ -19,6 +19,8 @@
 #include "Score.h"
 #include "sign.h"
 #include "sound.h"
+#include "tutorial.h"
+#include "countdown.h"
 #include "number_manager.h"
 
 //*****************************************************************************
@@ -82,6 +84,10 @@ HRESULT CGame::Init()
 
 	//看板初期化
 	InitSign();
+
+	//チュートリアルとカウント
+	InitTutorial();
+	InitCountDown();
 
 	//各数値初期化
 	g_PushState.NowTargetButton = TARGETBUTTON_NONE;
@@ -161,7 +167,7 @@ HRESULT CGame::Init()
 	m_pstone_bridge->SetDiagonalLine(SCREEN_WIDTH, 500.0f);
 	m_pstone_bridge->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	m_pstone_bridge->SetUVSize(D3DXVECTOR2(0.3f, 0.5f));
-	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.008f, 0.0f));
+	m_pstone_bridge->SetUVMove(D3DXVECTOR2(0.0041f, 0.0f));
 	m_pstone_bridge->SetPolygon();
 
 
@@ -186,7 +192,7 @@ HRESULT CGame::Init()
 	m_nText[6] = CTexture::LoadTexture("data\\TEXTURE\\漂流物07.png");
 	m_nText[7] = CTexture::LoadTexture("data\\TEXTURE\\漂流物08.png");
 	m_nText[8] = CTexture::LoadTexture("data\\TEXTURE\\漂流物09.png");
-	m_nText[9] = CTexture::LoadTexture("data\\TEXTURE\\漂流物010.png");
+	m_nText[9] = CTexture::LoadTexture("data\\TEXTURE\\漂流物10.png");
 	m_nText[10] = CTexture::LoadTexture("data\\TEXTURE\\漂流物11.png");
 	m_nText[11] = CTexture::LoadTexture("data\\TEXTURE\\漂流物12.png");
 	m_nText[12] = CTexture::LoadTexture("data\\TEXTURE\\漂流物13.png");
@@ -195,7 +201,7 @@ HRESULT CGame::Init()
 	m_nText[15] = CTexture::LoadTexture("data\\TEXTURE\\漂流物16.png");
 	m_nText[16] = CTexture::LoadTexture("data\\TEXTURE\\漂流物17.png");
 
-
+	
 	m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
 
 
@@ -226,6 +232,10 @@ void CGame::Uninit()
 
 	//看板破棄
 	UninitSign();
+
+	//チュートリアルとカウントの終了
+	UninitCountDown();
+	UninitTutorial();
 
 	g_posWorld = { 0.0f,0.0f,0.0f };
 
@@ -267,156 +277,165 @@ void CGame::Uninit()
 //*****************************************************************************
 void CGame::Update()
 {
-	m_pFlowObject->Update();
-	m_pBg->Update();
-	if (g_gameState == GAMESTATE_DOWN)
+	bool bGame = GetCountDown();
+	if (bGame == true)
 	{
-		m_pstone_bridge->Update();
-		m_pNumber_Manager->Update();
-	}
-	if (g_gameState == GAMESTATE_END)
-	{
-		//スコア更新
-		UpdateScore();
-	}
-
-	if (g_PushState.nColorCount <= 0)
-	{
-		//色のリセット
-		m_pButton->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		g_PushState.nColorCount = 0;
+		UpdateTutorial();
+		UpdateCountDown();
 	}
 	else
 	{
-		//色の変更
-		m_pButton->SetColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-	}
-
-	//制限時間減少
-	g_PushState.nPushLimitTime--;
-	g_PushState.nTotalLimitTime--;
-	g_PushState.nColorCount--;
-
-	if (g_PushState.nPushLimitTime <= 0)
-	{//次のボタンまでの時間が０になったとき
-
-		//目標ボタンをランダムに設定
-		int nRandButton = rand() % (TARGETBUTTON_MAX - 1);
-		int nRandTime = (rand() % MAX_TIME + 1) * 60;
-
-		g_PushState.NowTargetButton = (TARGETBUTTON)(nRandButton + 1);
-		g_PushState.nPushLimitTime = nRandTime;
-	}
-
-	//GetInput
-	CInput *pInput = CInput::GetKey();
-
-
-	if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
-	{
-		//===============================================
-		//目標ボタンが押されているかの判定
-		if (g_PushState.NowTargetButton == TARGETBUTTON_UP)
+		m_pFlowObject->Update();
+		m_pBg->Update();
+		if (g_gameState == GAMESTATE_DOWN)
 		{
-			m_pButton->SetPos(POS_UP);
-			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(180)));
-			if (pInput->Trigger(KEY_UP) == true)
-			{
-				g_PushState.nPushCount++;
-				g_PushState.nColorCount = 3;
-
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
-
-				//サウンド(SE)の再生
-				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
-			}
+			m_pNumber_Manager->Update();
+			m_pstone_bridge->Update();
 		}
-		else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
+		if (g_gameState == GAMESTATE_END)
 		{
-			m_pButton->SetPos(POS_DOWN);
-			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(0)));
-			if (pInput->Trigger(KEY_DOWN) == true)
-			{
-				g_PushState.nPushCount++;
-				g_PushState.nColorCount = 3;
-
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
-
-				//サウンド(SE)の再生
-				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
-			}
-		}
-		else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
-		{
-			m_pButton->SetPos(POS_RIGHT);
-			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(90)));
-			if (pInput->Trigger(KEY_RIGHT) == true)
-			{
-				g_PushState.nPushCount++;
-				g_PushState.nColorCount = 3;
-
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
-
-				//サウンド(SE)の再生
-				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
-			}
-		}
-		else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
-		{
-			m_pButton->SetPos(POS_LEFT);
-			m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(270)));
-			if (pInput->Trigger(KEY_LEFT) == true)
-			{
-				g_PushState.nPushCount++;
-				g_PushState.nColorCount = 3;
-
-				SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
-
-				//サウンド(SE)の再生
-				CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
-			}
-
+			//スコア更新
+			UpdateScore();
 		}
 
-	}
-	m_pButton->Update();
+		if (g_PushState.nColorCount <= 0)
+		{
+			//色のリセット
+			m_pButton->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			g_PushState.nColorCount = 0;
+		}
+		else
+		{
+			//色の変更
+			m_pButton->SetColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+		}
 
-	//ドミノ情報取得
-	Domino *pDomino = GetDomino();
+		//制限時間減少
+		g_PushState.nPushLimitTime--;
+		g_PushState.nTotalLimitTime--;
+		g_PushState.nColorCount--;
 
-	//ドミノ更新
-	UpdateDomino();
+		if (g_PushState.nPushLimitTime <= 0)
+		{//次のボタンまでの時間が０になったとき
 
-	//スクロールの管理
-	ManageScroll();
+			//目標ボタンをランダムに設定
+			int nRandButton = rand() % (TARGETBUTTON_MAX - 1);
+			int nRandTime = (rand() % MAX_TIME + 1) * 60;
 
-	//ハンド更新
-	UpdateHand();
+			g_PushState.NowTargetButton = (TARGETBUTTON)(nRandButton + 1);
+			g_PushState.nPushLimitTime = nRandTime;
+		}
 
-	//看板更新
-	UpdateSign();
+		//GetInput
+		CInput *pInput = CInput::GetKey();
 
-	if (g_PushState.nTotalLimitTime <= 0 && g_gameState == GAMESTATE_PUSH)
-	{//制限時間がなくなったときドミノを倒しはじめる
 
-		//情報取得
-		Hand *pHand = GetHand();
+		if (g_gameState == GAMESTATE_PUSH && g_PushState.nPushCount < 999)
+		{
+			//===============================================
+			//目標ボタンが押されているかの判定
+			if (g_PushState.NowTargetButton == TARGETBUTTON_UP)
+			{
+				m_pButton->SetPos(POS_UP);
+				m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(180)));
+				if (pInput->Trigger(KEY_UP) == true)
+				{
+					g_PushState.nPushCount++;
+					g_PushState.nColorCount = 3;
 
-		pDomino->state = DOMINOSTATE_DOWN;
+					SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 
-		pHand->state = HANDSTATE_PUSH;
-	}
+					//サウンド(SE)の再生
+					CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
+				}
+			}
+			else if (g_PushState.NowTargetButton == TARGETBUTTON_DOWN)
+			{
+				m_pButton->SetPos(POS_DOWN);
+				m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(0)));
+				if (pInput->Trigger(KEY_DOWN) == true)
+				{
+					g_PushState.nPushCount++;
+					g_PushState.nColorCount = 3;
 
-	if (g_gameState == GAMESTATE_DOWN && GetDominoNum() == 0)
-	{//ドミノを一個も出さずに倒した場合
-		SetGameState(GAMESTATE_END);
-	}
+					SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
 
-	if (m_pFlowObject->GetPos().x < -300.0f)
-	{
-		m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
-		m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
-	}
+					//サウンド(SE)の再生
+					CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
+				}
+			}
+			else if (g_PushState.NowTargetButton == TARGETBUTTON_RIGHT)
+			{
+				m_pButton->SetPos(POS_RIGHT);
+				m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(90)));
+				if (pInput->Trigger(KEY_RIGHT) == true)
+				{
+					g_PushState.nPushCount++;
+					g_PushState.nColorCount = 3;
+
+					SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0, 0.0f));
+
+					//サウンド(SE)の再生
+					CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
+				}
+			}
+			else if (g_PushState.NowTargetButton == TARGETBUTTON_LEFT)
+			{
+				m_pButton->SetPos(POS_LEFT);
+				m_pButton->SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(270)));
+				if (pInput->Trigger(KEY_LEFT) == true)
+				{
+					g_PushState.nPushCount++;
+					g_PushState.nColorCount = 3;
+
+					SetDomino(D3DXVECTOR3(SCREEN_WIDTH * 0.3f + g_PushState.nPushCount * DOMINO_SPACE, 0.0f, 0.0f));
+
+					//サウンド(SE)の再生
+					CManager::GetSound()->Play(CSound::SOUND_SE_MASH_BOTTON);
+				}
+
+			}
+
+		}
+		m_pButton->Update();
+
+		//ドミノ情報取得
+		Domino *pDomino = GetDomino();
+
+		//ドミノ更新
+		UpdateDomino();
+
+		//スクロールの管理
+		ManageScroll();
+
+		//ハンド更新
+		UpdateHand();
+
+		//看板更新
+		UpdateSign();
+
+		if (g_PushState.nTotalLimitTime <= 0 && g_gameState == GAMESTATE_PUSH)
+		{//制限時間がなくなったときドミノを倒しはじめる
+
+			//情報取得
+			Hand *pHand = GetHand();
+
+			pDomino->state = DOMINOSTATE_DOWN;
+
+			pHand->state = HANDSTATE_PUSH;
+		}
+
+		if (g_gameState == GAMESTATE_DOWN && GetDominoNum() == 0)
+		{//ドミノを一個も出さずに倒した場合
+			SetGameState(GAMESTATE_END);
+		}
+
+		if (m_pFlowObject->GetPos().x < -300.0f)
+		{
+			m_pFlowObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT * 0.5f + 100.0f, 0.0f));
+			m_pFlowObject->SetTextIndex(m_nText[rand() % TEXT_MAX]);
+		}
+
 
 
 	if (g_gameState == GAMESTATE_END)
@@ -459,13 +478,15 @@ void ManageScroll(void)
 //*****************************************************************************
 void CGame::Draw()
 {
+	bool bGame = GetCountDown();
+	TutorialSTATE Tutorial = GetTutorialState();
 	//背景描画
 	m_pBg->Draw();
 
 	//漂流物
 	m_pFlowObject->Draw();
 
-	if (g_gameState == GAMESTATE_PUSH)
+	if (g_gameState == GAMESTATE_PUSH && bGame == false )
 	{//ボタン描画
 		m_pButton->Draw();
 	}
@@ -488,6 +509,17 @@ void CGame::Draw()
 	{
 		//スコア描画
 		DrawScore();
+	}
+
+	if (bGame == true)
+	{
+		DrawTutorial();
+		
+		if (Tutorial == TutorialSTATE_END)
+		{
+			DrawCountDown();
+		}
+		
 	}
 }
 
