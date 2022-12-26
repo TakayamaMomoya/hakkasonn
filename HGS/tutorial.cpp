@@ -41,7 +41,7 @@ void InitTutorial(void)
 	//テクスチャ読み込み
 
 
-	D3DXCreateTextureFromFile(pDevice, "Data\\TEXTURE\\Tutorial.001.png", &g_apTextureTutorial[0]);
+	D3DXCreateTextureFromFile(pDevice, "Data\\TEXTURE\\tutorial.png", &g_apTextureTutorial[0]);
 
 
 
