@@ -66,9 +66,9 @@ void InitHand(void)
 	Hand *pHand = GetHand();
 
 	//–Ú•W’n“_Ý’è
-	g_aPosDestHand[0] = { SCREEN_WIDTH * 0.2f,SCREEN_HEIGHT * 0.55f,0.0f };
-	g_aPosDestHand[1] = { SCREEN_WIDTH * 0.0f,SCREEN_HEIGHT * 0.55f,0.0f };
-	g_aPosDestHand[2] = { SCREEN_WIDTH * 0.3f,SCREEN_HEIGHT * 0.55f,0.0f };
+	g_aPosDestHand[0] = { SCREEN_WIDTH * 0.2f,SCREEN_HEIGHT * 0.7f,0.0f };
+	g_aPosDestHand[1] = { SCREEN_WIDTH * 0.0f,SCREEN_HEIGHT * 0.7f,0.0f };
+	g_aPosDestHand[2] = { SCREEN_WIDTH * 0.3f,SCREEN_HEIGHT * 0.7f,0.0f };
 
 	//î•ñ‚ÌÝ’è
 	pHand->pos = { g_aPosDestHand[0].x ,g_aPosDestHand[0].y,0.0f };
